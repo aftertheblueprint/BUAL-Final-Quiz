@@ -54,6 +54,50 @@
   .btn-secondary:hover:not(:disabled) { background: #f8fafc; }
   .btn-starred { background: #fffbeb; color: #92400e; border: 1px solid #f59e0b; }
   .btn-starred:hover:not(:disabled) { background: #fef3c7; }
+  .btn-toggle-off {
+    background: #fff7ed;
+    color: #9a3412;
+    border: 1px solid #fb923c;
+  }
+  .btn-toggle-off:hover:not(:disabled) { background: #ffedd5; }
+
+  .difficulty-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    background: rgba(255,255,255,0.86);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 14px;
+    margin: 0 0 16px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+  }
+  .difficulty-copy strong { display: block; margin-bottom: 3px; }
+  .difficulty-copy span { color: var(--muted); font-size: 0.86rem; line-height: 1.35; }
+  .difficulty-buttons { display: flex; gap: 8px; flex-wrap: wrap; flex: 0 0 auto; }
+  .difficulty-toggle {
+    background: white;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 9px 12px;
+  }
+  .difficulty-toggle.active.easy { background: #ecfdf5; color: #047857; border-color: #34d399; }
+  .difficulty-toggle.active.standard { background: #eff6ff; color: #1d4ed8; border-color: #60a5fa; }
+  .difficulty-toggle.active.hard { background: #fff7ed; color: #c2410c; border-color: #fb923c; }
+  .meta-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .difficulty-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 800;
+  }
+  .difficulty-badge.easy { background: #ecfdf5; color: #047857; }
+  .difficulty-badge.standard { background: #eff6ff; color: #1d4ed8; }
+  .difficulty-badge.hard { background: #fff7ed; color: #c2410c; }
+
   .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 18px 0; }
   .stat { background: rgba(255,255,255,0.82); border: 1px solid var(--border); border-radius: 16px; padding: 14px; box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06); }
   .stat .label { color: var(--muted); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
@@ -142,6 +186,9 @@
     .nav-group { width: 100%; }
     .nav-group button { flex: 1; }
     .exhibit-table { min-width: 520px; }
+    .difficulty-panel { align-items: flex-start; flex-direction: column; }
+    .difficulty-buttons { width: 100%; }
+    .difficulty-toggle { flex: 1; }
     #quizCard { height: 700px; padding: 18px; }
     .progress-row { align-items: flex-start; flex-direction: column; gap: 5px; }
   }
@@ -158,6 +205,7 @@
       <button class="btn-secondary" id="restartBtn">Restart</button>
       <button class="btn-secondary" id="shuffleBtn">Shuffle</button>
       <button class="btn-starred" id="starredBtn">★ Study Starred</button>
+      <button class="btn-secondary" id="quizletToggleBtn" aria-pressed="true">Quizlet: On</button>
     </div>
   </section>
 
@@ -174,9 +222,24 @@
     <span class="legend-chip"><span class="legend-dot quizlet"></span>Final Quizlet Study Guide</span>
   </div>
 
+  <section class="difficulty-panel" aria-label="Difficulty selection">
+    <div class="difficulty-copy">
+      <strong>Difficulty mix</strong>
+      <span>Select one or more levels for the Study Guide section. The Quizlet section remains fixed and is not changed by these controls.</span>
+    </div>
+    <div class="difficulty-buttons">
+      <button class="difficulty-toggle easy" data-difficulty="Easy" aria-pressed="true">Easy</button>
+      <button class="difficulty-toggle standard" data-difficulty="Standard" aria-pressed="true">Standard</button>
+      <button class="difficulty-toggle hard" data-difficulty="Hard" aria-pressed="true">Hard</button>
+    </div>
+  </section>
+
   <section class="card" id="quizCard">
     <div class="question-meta">
-      <span class="source-badge guide" id="sourceBadge">Study Guide</span>
+      <div class="meta-left">
+        <span class="source-badge guide" id="sourceBadge">Study Guide</span>
+        <span class="difficulty-badge standard" id="difficultyBadge">Standard</span>
+      </div>
       <button class="favorite-btn" id="favoriteBtn" aria-label="Star this question" aria-pressed="false" title="Star this question">☆</button>
     </div>
     <div class="progress-row">
@@ -213,6 +276,7 @@
   </section>
 </main>
 
+
 <script>
 const QUESTIONS = [
   {
@@ -228,7 +292,8 @@ const QUESTIONS = [
     ],
     "explanation": "Decision variables are the quantities the decision maker controls. The objective function measures what is maximized or minimized, and constraints limit the allowable decisions. For example, a product-mix model chooses production quantities, maximizes profit, and stays within labor and sales limits.",
     "citation": "Ch. 12 PowerPoint, §12-2 (“Introduction to Optimization”); Albright & Winston, 8e, Ch. 12, §12-2, pp. 537–538.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-02",
@@ -243,7 +308,8 @@ const QUESTIONS = [
     ],
     "explanation": "Decision variables are the controllable choices. In a transportation model, each shipment quantity is a decision variable; plant capacities and customer demands are inputs rather than choices.",
     "citation": "Ch. 12 PowerPoint, §12-2 (“Introduction to Optimization”); Albright & Winston, 8e, Ch. 12, §12-2, pp. 537–538.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-03",
@@ -258,7 +324,8 @@ const QUESTIONS = [
     ],
     "explanation": "The objective translates the decision maker’s goal into one number. Examples include maximizing total profit, minimizing total shipping cost, or minimizing the number of employees required.",
     "citation": "Ch. 12 PowerPoint, §12-2 (“Introduction to Optimization”); Albright & Winston, 8e, Ch. 12, §12-2, pp. 537–538.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-04",
@@ -273,7 +340,8 @@ const QUESTIONS = [
     ],
     "explanation": "Feasibility is about obeying all restrictions. Optimality is a separate requirement: the optimal solution must first be feasible and then be best among all feasible solutions.",
     "citation": "Ch. 12 PowerPoint, §12-2 (“Introduction to Optimization”); Albright & Winston, 8e, Ch. 12, §12-2, pp. 537–538.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Hard"
   },
   {
     "id": "sg-05",
@@ -288,7 +356,8 @@ const QUESTIONS = [
     ],
     "explanation": "A shadow price measures the marginal value of relaxing a constraint. If an assembly-hours constraint has a shadow price of $16, one additional available hour increases optimal profit by $16, provided the change remains within the allowable range.",
     "citation": "Ch. 12 PowerPoint, §12-4a (“Sensitivity Report: Shadow Price”); Albright & Winston, 8e, Ch. 12, §12-4, pp. 550–553.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-06",
@@ -303,7 +372,8 @@ const QUESTIONS = [
     ],
     "explanation": "Multiply the shadow price by the right-hand-side change: $12 × 25 = $300. The calculation is valid only while the constraint change stays within the sensitivity report’s allowable increase or decrease.",
     "citation": "Ch. 12 PowerPoint, §12-4a (“Sensitivity Report: Shadow Price”); Albright & Winston, 8e, Ch. 12, §12-4, pp. 550–553.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-07",
@@ -318,7 +388,8 @@ const QUESTIONS = [
     ],
     "explanation": "The left side calculates total labor used, while the right side is the maximum available labor. The phrase “at most” signals a ≤ constraint.",
     "citation": "Ch. 12 PowerPoint, §§12-2 to 12-5; Albright & Winston, 8e, Ch. 12, §§12-2, 12-5.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-08",
@@ -333,7 +404,8 @@ const QUESTIONS = [
     ],
     "explanation": "The phrase “at least” means the total cannot fall below 1,000, so the inequality points toward values greater than or equal to 1,000.",
     "citation": "Ch. 12 PowerPoint, §§12-2 to 12-5; Albright & Winston, 8e, Ch. 12, §§12-2, 12-5.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-09",
@@ -348,7 +420,8 @@ const QUESTIONS = [
     ],
     "explanation": "Rounding each variable independently can break a tight constraint. For example, if x = 2.6 and y = 2.6 satisfy 2x + 2y ≤ 10.5, rounding both to 3 gives 12 ≤ 10.5, which is infeasible. Integer programming should be used when whole-number decisions are required.",
     "citation": "Ch. 12 PowerPoint, §§12-2 to 12-5; Albright & Winston, 8e, Ch. 12, §§12-2, 12-5. Ch. 13 PowerPoint, §13-7 (“Integer Optimization Models”); Albright & Winston, 8e, Ch. 13, §13-7, pp. 639–657.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-10",
@@ -363,7 +436,8 @@ const QUESTIONS = [
     ],
     "explanation": "The Briggs example is static because the same weekly staffing requirements repeat. A dynamic model would be needed when demand, vacations, or other conditions change from week to week.",
     "citation": "Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-11",
@@ -378,7 +452,8 @@ const QUESTIONS = [
     ],
     "explanation": "Linear programming is used whenever controllable quantities can be linked to a linear objective and linear constraints. Chapters 12 and 13 apply it to operations and finance problems.",
     "citation": "Ch. 12 PowerPoint, §12-2 (“Introduction to Optimization”); Albright & Winston, 8e, Ch. 12, §12-2, pp. 537–538. Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-12",
@@ -393,7 +468,8 @@ const QUESTIONS = [
     ],
     "explanation": "Alternate optima can differ operationally while tying on the objective. In scheduling, a manager may choose among equally optimal schedules using nonquantitative considerations such as fairness or preferred days off.",
     "citation": "Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-13",
@@ -408,7 +484,8 @@ const QUESTIONS = [
     ],
     "explanation": "Blending models combine ingredients in the right proportions. Examples include mixing crude oils into gasoline, metals into steel, or ingredients into food products while meeting quality and availability constraints.",
     "citation": "Ch. 13 PowerPoint, §13-3 (“Blending Models”); Albright & Winston, 8e, Ch. 13, §13-3, pp. 600–605.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-14",
@@ -423,7 +500,8 @@ const QUESTIONS = [
     ],
     "explanation": "A percentage-of-total restriction compares the amount of one input with the entire blend. The equation can be rearranged into a linear form, but the displayed form is usually the easiest to interpret.",
     "citation": "Ch. 13 PowerPoint, §13-3 (“Blending Models”); Albright & Winston, 8e, Ch. 13, §13-3, pp. 600–605.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-15",
@@ -438,7 +516,8 @@ const QUESTIONS = [
     ],
     "explanation": "Total quality units are 10x₁ + 5x₂. Requiring average quality of at least 8 means total quality units must be at least 8 times total quantity. This avoids putting a ratio directly into Solver and keeps the constraint linear.",
     "citation": "Ch. 13 PowerPoint, §13-3 (“Blending Models”); Albright & Winston, 8e, Ch. 13, §13-3, pp. 600–605.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Hard"
   },
   {
     "id": "sg-16",
@@ -453,7 +532,8 @@ const QUESTIONS = [
     ],
     "explanation": "The model chooses shipment flows. Capacity limits how much can leave each origin, demand specifies how much must reach each destination, and unit shipping costs determine the total cost objective.",
     "citation": "Ch. 13 PowerPoint, §13-4 (“Logistics Models”); Albright & Winston, 8e, Ch. 13, §13-4, pp. 605–621.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-17",
@@ -468,7 +548,8 @@ const QUESTIONS = [
     ],
     "explanation": "A plant or warehouse is shown as a node. An arrow between nodes is a route, and the decision variable attached to that route is the flow—the amount shipped.",
     "citation": "Ch. 13 PowerPoint, §13-4 (“Logistics Models”); Albright & Winston, 8e, Ch. 13, §13-4, pp. 605–621.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-18",
@@ -483,7 +564,8 @@ const QUESTIONS = [
     ],
     "explanation": "A transshipment node only passes goods through the network. Therefore, every unit entering must eventually leave, assuming there is no shrinkage or accumulation.",
     "citation": "Ch. 13 PowerPoint, §13-4 (“Logistics Models”); Albright & Winston, 8e, Ch. 13, §13-4, pp. 605–621.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Hard"
   },
   {
     "id": "sg-19",
@@ -498,7 +580,8 @@ const QUESTIONS = [
     ],
     "explanation": "Aggregate planning links hiring, firing, regular production, overtime, inventory, and demand across months or quarters. The objective is typically to minimize total labor, production, and inventory-related costs.",
     "citation": "Ch. 13 PowerPoint, §13-5 (“Aggregate Planning Models”); Albright & Winston, 8e, Ch. 13, §13-5, pp. 621–629.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-20",
@@ -513,7 +596,8 @@ const QUESTIONS = [
     ],
     "explanation": "Workers do not appear or disappear without a personnel action. The balance equation is analogous to an inventory balance: start with what you have, add inflows, and subtract outflows.",
     "citation": "Ch. 13 PowerPoint, §13-5 (“Aggregate Planning Models”); Albright & Winston, 8e, Ch. 13, §13-5, pp. 621–629.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-21",
@@ -528,7 +612,8 @@ const QUESTIONS = [
     ],
     "explanation": "Inventory carries production decisions across periods. If beginning inventory is 500, production is 3,000, and demand is 2,800, ending inventory is 500 + 3,000 − 2,800 = 700.",
     "citation": "Ch. 13 PowerPoint, §13-5 (“Aggregate Planning Models”); Albright & Winston, 8e, Ch. 13, §13-5, pp. 621–629.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Hard"
   },
   {
     "id": "sg-22",
@@ -543,7 +628,8 @@ const QUESTIONS = [
     ],
     "explanation": "Integer programming directly enforces whole-number requirements. It is appropriate for indivisible decisions such as employees, facilities, projects, or trucks.",
     "citation": "Ch. 13 PowerPoint, §13-7 (“Integer Optimization Models”); Albright & Winston, 8e, Ch. 13, §13-7, pp. 639–657.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-23",
@@ -558,7 +644,8 @@ const QUESTIONS = [
     ],
     "explanation": "Binary variables encode yes/no decisions. For a project-selection model, x = 1 can mean fund the project and x = 0 can mean do not fund it.",
     "citation": "Ch. 13 PowerPoint, §13-7 (“Integer Optimization Models”); Albright & Winston, 8e, Ch. 13, §13-7, pp. 639–657.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-24",
@@ -573,7 +660,8 @@ const QUESTIONS = [
     ],
     "explanation": "Each cell gives the consequence of choosing one decision when a particular uncertain state occurs. The decision is controllable; the state of nature is not.",
     "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-25",
@@ -588,7 +676,8 @@ const QUESTIONS = [
     ],
     "explanation": "Historical frequencies are useful when relevant past data exist. For a new product with little history, managers may rely on informed judgment, market research, or expert interviews.",
     "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-26",
@@ -603,7 +692,8 @@ const QUESTIONS = [
     ],
     "explanation": "Decision analysis separates what can be chosen from what cannot. A manager chooses an alternative now, then later observes which state of nature occurs and receives the corresponding payoff.",
     "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-27",
@@ -618,7 +708,8 @@ const QUESTIONS = [
     ],
     "explanation": "A sound decision can still lead to a poor outcome because uncertainty remains. Decision analysis improves the process by organizing choices, probabilities, consequences, and risk attitudes.",
     "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-28",
@@ -633,7 +724,8 @@ const QUESTIONS = [
     ],
     "explanation": "EMV and expected regret weight outcomes by probabilities. Maximax, maximin, and minimax regret can be applied without assigning probabilities to the states of nature.",
     "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277. Final Exam Study Guide items 16–19.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-29",
@@ -648,7 +740,8 @@ const QUESTIONS = [
     ],
     "explanation": "Maximax is optimistic: find the largest payoff in each row and then choose the largest of those values. The row maxima are A = 100, B = 60, C = 40, and Bank = 10, so A is selected.",
     "citation": "Final Exam Study Guide item 17; method consistent with Ch. 7 PowerPoint §7-2 discussion of best-outcome criteria.",
-    "exhibit": "\n<div class=\"exhibit-title\">Illustrative payoff matrix</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>Strong market</th><th>Moderate market</th><th>Weak market</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n"
+    "exhibit": "\n<div class=\"exhibit-title\">Illustrative payoff matrix</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>Strong market</th><th>Moderate market</th><th>Weak market</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-30",
@@ -663,7 +756,8 @@ const QUESTIONS = [
     ],
     "explanation": "Maximin is pessimistic: find each alternative’s minimum payoff and select the largest minimum. The row minima are A = -40, B = 0, C = 40, and Bank = 10. The largest minimum is 40 for C.",
     "citation": "Final Exam Study Guide item 17; method consistent with Ch. 7 PowerPoint §7-2 discussion of worst-outcome criteria.",
-    "exhibit": "\n<div class=\"exhibit-title\">Illustrative payoff matrix</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>Strong market</th><th>Moderate market</th><th>Weak market</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n"
+    "exhibit": "\n<div class=\"exhibit-title\">Illustrative payoff matrix</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>Strong market</th><th>Moderate market</th><th>Weak market</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-31",
@@ -678,7 +772,8 @@ const QUESTIONS = [
     ],
     "explanation": "First compute regret relative to the best payoff in each state. The maximum regrets are A = 80, B = 40, C = 60, and Bank = 90. Minimax regret chooses the smallest of these maximum regrets, so B is selected.",
     "citation": "Final Exam Study Guide item 17; Final Quizlet Q11–Q13; regret method verified by direct calculation.",
-    "exhibit": "\n<div class=\"exhibit-title\">Illustrative payoff matrix</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>Strong market</th><th>Moderate market</th><th>Weak market</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n"
+    "exhibit": "\n<div class=\"exhibit-title\">Illustrative payoff matrix</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>Strong market</th><th>Moderate market</th><th>Weak market</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n",
+    "difficulty": "Hard"
   },
   {
     "id": "sg-32",
@@ -693,7 +788,8 @@ const QUESTIONS = [
     ],
     "explanation": "Regret for a state is the payoff forgone by not choosing the best action for that state. Expected opportunity loss weights those regrets by the state probabilities and adds them.",
     "citation": "Final Exam Study Guide item 18; Final Quizlet Q14; probability-weighted calculation follows Ch. 7’s expected-value framework.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-33",
@@ -708,7 +804,8 @@ const QUESTIONS = [
     ],
     "explanation": "Expected regret = 20(0.2) + 10(0.3) + 0(0.5) = 4 + 3 + 0 = 7.",
     "citation": "Final Exam Study Guide item 18; Final Quizlet Q14; Ch. 7 PowerPoint §7-3 uses probability-weighted expected values.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-34",
@@ -723,7 +820,8 @@ const QUESTIONS = [
     ],
     "explanation": "Expected regret is a probability-weighted average, so each regret is multiplied by the probability of the state in which that regret would occur. A regret of 20 occurs 20% of the time and contributes 20 × 0.2 = 4. A regret of 10 occurs 30% of the time and contributes 10 × 0.3 = 3. A regret of 0 occurs 50% of the time and contributes 0 × 0.5 = 0. Adding the contributions gives 4 + 3 + 0 = 7. The probabilities are weights; this is why the calculation is not the simple average of 20, 10, and 0.",
     "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-35",
@@ -738,7 +836,8 @@ const QUESTIONS = [
     ],
     "explanation": "EMV = $200,000(0.4) + (−$50,000)(0.6) = $80,000 − $30,000 = $50,000. EMV is an average over repeated similar decisions, not a guarantee that $50,000 will actually occur.",
     "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-36",
@@ -753,7 +852,8 @@ const QUESTIONS = [
     ],
     "explanation": "A square marks a choice, a circle marks resolution of uncertainty, and a triangle marks completion of the path. Time proceeds from left to right.",
     "citation": "Ch. 7 PowerPoint, §7-3 (“Decision Tree Conventions” and “Folding-Back Procedure”); Albright & Winston, 8e, Ch. 7, §7-3.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-37",
@@ -768,7 +868,8 @@ const QUESTIONS = [
     ],
     "explanation": "At a chance node, multiply each branch value by its conditional probability and sum. At a decision node, retain the branch with the best value. Repeating this process back to the root identifies the optimal strategy.",
     "citation": "Ch. 7 PowerPoint, §7-3 (“Decision Tree Conventions” and “Folding-Back Procedure”); Albright & Winston, 8e, Ch. 7, §7-3.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-38",
@@ -783,7 +884,8 @@ const QUESTIONS = [
     ],
     "explanation": "EVSI is the maximum amount worth paying for imperfect information such as a market study. The current textbook calls this expected value of information (EVI); the calculation is the same when the information is sample rather than perfect.",
     "citation": "Ch. 7 PowerPoint, §7-6b (“Expected Value of Information”); Albright & Winston, 8e, Ch. 7, §7-6b, pp. 293–296.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-39",
@@ -798,7 +900,8 @@ const QUESTIONS = [
     ],
     "explanation": "EVSI = $1.78 million − $1.40 million = $0.38 million, or $380,000. Paying more than this would reduce the net EMV below the no-information alternative.",
     "citation": "Ch. 7 PowerPoint, §7-6b (“Expected Value of Information”); Albright & Winston, 8e, Ch. 7, §7-6b, pp. 293–296.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-40",
@@ -813,7 +916,8 @@ const QUESTIONS = [
     ],
     "explanation": "The vertical bar means “given.” Conditional probability updates the probability of A after B is known.",
     "citation": "Ch. 7 PowerPoint, §7-6a (“Bayes’ Rule”); Albright & Winston, 8e, Ch. 7, §7-6a, pp. 289–293.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-41",
@@ -828,7 +932,8 @@ const QUESTIONS = [
     ],
     "explanation": "P(A | B) = P(A and B) / P(B) = 0.18 / 0.30 = 0.60. The numerator must be the joint probability, and the denominator is the probability of the given event.",
     "citation": "Ch. 7 PowerPoint, §7-6a (“Bayes’ Rule”); Albright & Winston, 8e, Ch. 7, §7-6a, pp. 289–293.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-42",
@@ -843,7 +948,8 @@ const QUESTIONS = [
     ],
     "explanation": "Bayes’ rule gives [0.80(0.20)] / [0.80(0.20) + 0.10(0.80)] = 0.16 / 0.24 = 2/3. The positive result raises the probability from the 0.20 prior to about 0.667.",
     "citation": "Ch. 7 PowerPoint, §7-6a (“Bayes’ Rule”); Albright & Winston, 8e, Ch. 7, §7-6a, pp. 289–293.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Hard"
   },
   {
     "id": "sg-43",
@@ -858,7 +964,8 @@ const QUESTIONS = [
     ],
     "explanation": "A risk-averse decision maker has a concave utility function and diminishing marginal utility. A risk-neutral decision maker treats utility as linear in money, while a risk-loving decision maker has a convex utility function.",
     "citation": "Ch. 7 PowerPoint, §7-7 (“Role of Risk Aversion,” utility, and certainty equivalents); Albright & Winston, 8e, Ch. 7, §7-7, pp. 300–306.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-44",
@@ -873,7 +980,8 @@ const QUESTIONS = [
     ],
     "explanation": "Risk premium = EMV − certainty equivalent = $100,000 − $72,000 = $28,000. It is the amount of expected value a risk-averse person is willing to give up to avoid the gamble.",
     "citation": "Ch. 7 PowerPoint, §7-7 (“Role of Risk Aversion,” utility, and certainty equivalents); Albright & Winston, 8e, Ch. 7, §7-7, pp. 300–306.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-45",
@@ -888,7 +996,8 @@ const QUESTIONS = [
     ],
     "explanation": "Risk aversion means the person discounts a risky payoff distribution relative to its arithmetic expected value. The gap EMV − CE is the risk premium.",
     "citation": "Ch. 7 PowerPoint, §7-7 (“Role of Risk Aversion,” utility, and certainty equivalents); Albright & Winston, 8e, Ch. 7, §7-7, pp. 300–306.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-46",
@@ -903,7 +1012,8 @@ const QUESTIONS = [
     ],
     "explanation": "Classification predicts categories, prediction estimates numeric outcomes, clustering finds natural groups, market-basket analysis finds items purchased together, and forecasting projects time-series patterns.",
     "citation": "Albright & Winston, 8e, Ch. 16, §16-1 and §16-2; Ch. 17, §17-3.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-47",
@@ -918,7 +1028,8 @@ const QUESTIONS = [
     ],
     "explanation": "Classifying a customer as a buyer or nonbuyer is categorical. Predicting the dollar amount the customer will spend is numeric.",
     "citation": "Albright & Winston, 8e, Ch. 16, §16-1 and §16-2; Ch. 17, §17-3.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-48",
@@ -933,7 +1044,8 @@ const QUESTIONS = [
     ],
     "explanation": "Discriminant analysis is a supervised classification method. It uses known group memberships to construct discriminant scores and then applies the rule to new observations.",
     "citation": "Albright & Winston, 8e, p. 808 notes that discriminant analysis is a classical classification method with the same basic goal as logistic regression; Final Quizlet Q18 and Q32 provide the course-specific wording.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-49",
@@ -948,7 +1060,8 @@ const QUESTIONS = [
     ],
     "explanation": "If a group is described by Age, Income, and Debt, its centroid consists of that group’s average Age, average Income, and average Debt. New observations can be compared with group centroids as part of classification.",
     "citation": "Albright & Winston, 8e, p. 808 notes that discriminant analysis is a classical classification method with the same basic goal as logistic regression; Final Quizlet Q18 and Q32 provide the course-specific wording.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-50",
@@ -963,7 +1076,8 @@ const QUESTIONS = [
     ],
     "explanation": "Logistic regression uses an S-shaped function so predicted probabilities remain between 0 and 1. A cutoff such as 0.5 can then convert the estimated probability into a class prediction.",
     "citation": "Albright & Winston, 8e, Ch. 16, §16-2b, pp. 803–808.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-51",
@@ -978,7 +1092,8 @@ const QUESTIONS = [
     ],
     "explanation": "The coefficient sign tells the direction of the relationship with the log odds. The magnitude is often interpreted more conveniently through exp(coefficient), which is an odds multiplier.",
     "citation": "Albright & Winston, 8e, Ch. 16, §16-2b, pp. 803–808.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-52",
@@ -993,7 +1108,8 @@ const QUESTIONS = [
     ],
     "explanation": "The method requires a distance or similarity measure. With k = 5, for example, a new customer is assigned to the class held by the majority of the five closest known customers.",
     "citation": "Albright & Winston, 8e, Ch. 17, Problem 9, pp. 844–845 (nearest-neighbor approach).",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-53",
@@ -1008,7 +1124,8 @@ const QUESTIONS = [
     ],
     "explanation": "Neural networks can model complex nonlinear patterns and often predict well, but their internal weights are difficult to interpret, so they are often described as a black box.",
     "citation": "Albright & Winston, 8e, Ch. 16, §16-2c, pp. 808–812.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "sg-54",
@@ -1023,7 +1140,8 @@ const QUESTIONS = [
     ],
     "explanation": "Affinity analysis searches for rules such as “customers who buy hot dogs and buns also tend to buy mustard.” Businesses use the results for placement, cross-selling, promotions, and recommendations.",
     "citation": "Albright & Winston, 8e, Ch. 17, §17-3, pp. 840–843.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Easy"
   },
   {
     "id": "sg-55",
@@ -1038,7 +1156,8 @@ const QUESTIONS = [
     ],
     "explanation": "Lift above 1 indicates X and Y occur together more often than expected under independence. A useful rule usually has enough support, high confidence, and lift greater than 1.",
     "citation": "Albright & Winston, 8e, Ch. 17, §17-3, pp. 840–843.",
-    "exhibit": ""
+    "exhibit": "",
+    "difficulty": "Standard"
   },
   {
     "id": "quiz-01",
@@ -1054,7 +1173,24 @@ const QUESTIONS = [
     "explanation": "The repeated weekly requirements make the model static. The Chapter 13 scheduling example uses this assumption; a dynamic model is needed when requirements change over time.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "a regression forecasting problem",
+        "a one-time project problem",
+        "a payoff matrix problem"
+      ],
+      "Standard": [
+        "a dynamic scheduling problem",
+        "a transportation scheduling problem",
+        "All of these options"
+      ],
+      "Hard": [
+        "a dynamic scheduling problem",
+        "an aggregate-planning problem",
+        "a rolling-horizon scheduling problem"
+      ]
+    }
   },
   {
     "id": "quiz-02",
@@ -1071,7 +1207,25 @@ const QUESTIONS = [
     "explanation": "Blending, logistics, set covering, and many financial allocation problems are optimization applications. Forecasting is primarily a predictive time-series task rather than a broad LP model class.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Employee scheduling models",
+        "Blending models",
+        "Transportation models"
+      ],
+      "Standard": [
+        "Blending models",
+        "Financial portfolio models",
+        "Logistics models",
+        "Set covering models"
+      ],
+      "Hard": [
+        "Set-covering models",
+        "Capital-budgeting models",
+        "Aggregate-planning models"
+      ]
+    }
   },
   {
     "id": "quiz-03",
@@ -1087,7 +1241,24 @@ const QUESTIONS = [
     "explanation": "Multiple optimal solutions differ in at least some decision-variable values but tie for the best objective value. Shadow prices do not have to be identical across alternate model representations or bases.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "All solutions have no constraints",
+        "All decision variables equal zero",
+        "All solutions use the same probabilities"
+      ],
+      "Standard": [
+        "All solutions have the same values for the decision variables",
+        "All solutions have the same shadow prices",
+        "All of these options"
+      ],
+      "Hard": [
+        "All solutions have the same decision-variable values",
+        "All solutions have the same set of binding constraints",
+        "All solutions have the same shadow prices"
+      ]
+    }
   },
   {
     "id": "quiz-04",
@@ -1103,7 +1274,24 @@ const QUESTIONS = [
     "explanation": "Rounding produces integer values, but it can violate constraints and does not search the feasible integer solutions for the best one. An integer-programming model is required when integrality matters.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 12 PowerPoint, §§12-2 to 12-5; Albright & Winston, 8e, Ch. 12, §§12-2, 12-5. Ch. 13 PowerPoint, §13-7 (“Integer Optimization Models”); Albright & Winston, 8e, Ch. 13, §13-7, pp. 639–657.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "an integer solution that is always optimal",
+        "the unchanged fractional solution",
+        "a guaranteed feasible solution"
+      ],
+      "Standard": [
+        "integer solution that is optimal",
+        "feasible solution that is not necessarily optimal",
+        "infeasible solution"
+      ],
+      "Hard": [
+        "an integer solution that is feasible whenever the LP solution was feasible",
+        "an optimal solution to the integer model",
+        "an integer solution with the same objective value as the LP solution"
+      ]
+    }
   },
   {
     "id": "quiz-05",
@@ -1119,7 +1307,24 @@ const QUESTIONS = [
     "explanation": "A basic transportation model permits direct shipment from origins to destinations. A more general logistics or transshipment model can include intermediate warehouses.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-4 (“Logistics Models”); Albright & Winston, 8e, Ch. 13, §13-4, pp. 605–621.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "regression problem",
+        "payoff-matrix problem",
+        "blending problem"
+      ],
+      "Standard": [
+        "assignment problem",
+        "network problem",
+        "transshipment problem"
+      ],
+      "Hard": [
+        "assignment problem",
+        "transshipment problem",
+        "minimum-spanning-tree problem"
+      ]
+    }
   },
   {
     "id": "quiz-06",
@@ -1135,7 +1340,24 @@ const QUESTIONS = [
     "explanation": "A transportation model generally minimizes the sum of unit shipping cost × shipment quantity while respecting origin capacities and destination demands.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-4 (“Logistics Models”); Albright & Winston, 8e, Ch. 13, §13-4, pp. 605–621.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "maximize uncertainty",
+        "maximize the number of routes",
+        "minimize customer demand"
+      ],
+      "Standard": [
+        "maximize profits",
+        "maximize revenue",
+        "maximize feasibility"
+      ],
+      "Hard": [
+        "maximize total flow regardless of demand",
+        "minimize unused capacity",
+        "equalize the cost on every route"
+      ]
+    }
   },
   {
     "id": "quiz-07",
@@ -1151,7 +1373,24 @@ const QUESTIONS = [
     "explanation": "Flows are decision variables, not inputs. The key inputs are origin capacities, destination demands, and the unit cost on each allowable route.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-4 (“Logistics Models”); Albright & Winston, 8e, Ch. 13, §13-4, pp. 605–621.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Regression coefficients, p-values and residuals",
+        "Probabilities, payoffs and utilities",
+        "Means, medians and standard deviations"
+      ],
+      "Standard": [
+        "Capacities, demands and flows",
+        "Supplies, demands and flows",
+        "Supplies, demands and arcs"
+      ],
+      "Hard": [
+        "Supplies, demands and decision-variable flows",
+        "Capacities, route availability and optimal flows",
+        "Demands, arc flows and shadow prices"
+      ]
+    }
   },
   {
     "id": "quiz-08",
@@ -1167,7 +1406,24 @@ const QUESTIONS = [
     "explanation": "The Quizlet answer is “flows.” The textbook is more precise: an arc represents a route, while the decision variable carried on the arc is called its flow. Because “route” is not offered, the Quizlet likely uses “flows” as shorthand for the quantities associated with the arcs.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-4 (“Logistics Models”); Albright & Winston, 8e, Ch. 13, §13-4, pp. 605–621.",
     "exhibit": "",
-    "caveat": "Retained with a textbook-precision caveat: arcs are routes; flows are quantities on arcs."
+    "caveat": "Retained with a textbook-precision caveat: arcs are routes; flows are quantities on arcs.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "decision trees",
+        "payoff matrices",
+        "regression residuals"
+      ],
+      "Standard": [
+        "warehouses",
+        "geographic locations",
+        "capacities"
+      ],
+      "Hard": [
+        "nodes",
+        "unit shipping costs",
+        "net supplies"
+      ]
+    }
   },
   {
     "id": "quiz-09",
@@ -1184,7 +1440,25 @@ const QUESTIONS = [
     "explanation": "At a pure transshipment node, no product is created, consumed, or stored, so total inflow equals total outflow. Supply nodes and demand nodes use balance equations with net supply or net demand.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-4 (“Logistics Models”); Albright & Winston, 8e, Ch. 13, §13-4, pp. 605–621.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Flow in = 0",
+        "Flow out = 0",
+        "Flow in + Flow out = 0"
+      ],
+      "Standard": [
+        "Flow in = Flow out + Net supply",
+        "Flow out = Flow in + Net supply",
+        "Flow in = Flow out + Net demand",
+        "Flow out = Flow in + Net demand"
+      ],
+      "Hard": [
+        "Flow in = Flow out + Net supply",
+        "Flow out = Flow in + Net supply",
+        "Flow in = Flow out + Net demand"
+      ]
+    }
   },
   {
     "id": "quiz-10",
@@ -1200,7 +1474,24 @@ const QUESTIONS = [
     "explanation": "Rows normally list controllable alternatives, columns list uncertain states of nature, and each cell contains the payoff for that decision-state combination.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "regression variables; residuals",
+        "products; objective coefficients",
+        "employees; work schedules"
+      ],
+      "Standard": [
+        "decision criteria; states of nature",
+        "decision alternatives; potential outcomes",
+        "decision criteria; potential outcomes"
+      ],
+      "Hard": [
+        "decision alternatives; possible payoffs",
+        "decision criteria; states of nature",
+        "states of nature; decision alternatives"
+      ]
+    }
   },
   {
     "id": "quiz-11",
@@ -1216,7 +1507,24 @@ const QUESTIONS = [
     "explanation": "Maximax chooses the largest possible payoff. The row maxima are 100, 60, 40, and 10, so A has the largest best-case payoff.",
     "citation": "Final - Quizlet Study Guide, specified question. Exhibit reconstructed because the original was not supplied; decision-rule method verified by direct calculation.",
     "exhibit": "\n<div class=\"exhibit-title\">Reconstructed Exhibit 14.1 <span>(original exhibit was not included)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>State 1</th><th>State 2</th><th>State 3</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "B",
+        "C",
+        "Bank"
+      ],
+      "Standard": [
+        "B",
+        "C",
+        "Bank"
+      ],
+      "Hard": [
+        "B",
+        "C",
+        "A and B"
+      ]
+    }
   },
   {
     "id": "quiz-12",
@@ -1232,7 +1540,24 @@ const QUESTIONS = [
     "explanation": "Maximin chooses the alternative with the largest worst-case payoff. The row minima are -40 for A, 0 for B, 40 for C, and 10 for Bank, so C is selected.",
     "citation": "Final - Quizlet Study Guide, specified question. Exhibit reconstructed because the original was not supplied; decision-rule method verified by direct calculation.",
     "exhibit": "\n<div class=\"exhibit-title\">Reconstructed Exhibit 14.1 <span>(original exhibit was not included)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>State 1</th><th>State 2</th><th>State 3</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "A",
+        "B",
+        "Bank"
+      ],
+      "Standard": [
+        "A",
+        "B",
+        "Bank"
+      ],
+      "Hard": [
+        "A",
+        "B",
+        "C and Bank"
+      ]
+    }
   },
   {
     "id": "quiz-13",
@@ -1248,7 +1573,24 @@ const QUESTIONS = [
     "explanation": "The best payoffs by state are 100, 50, and 40. The maximum regrets are A = 80, B = 40, C = 60, and Bank = 90. B has the smallest maximum regret.",
     "citation": "Final - Quizlet Study Guide, specified question. Exhibit reconstructed because the original was not supplied; regret table verified by direct calculation.",
     "exhibit": "\n<div class=\"exhibit-title\">Reconstructed Exhibit 14.1 <span>(original exhibit was not included)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>State 1</th><th>State 2</th><th>State 3</th></tr></thead>\n<tbody>\n<tr><th>A</th><td>100</td><td>-20</td><td>-40</td></tr>\n<tr><th>B</th><td>60</td><td>50</td><td>0</td></tr>\n<tr><th>C</th><td>40</td><td>40</td><td>40</td></tr>\n<tr><th>Bank</th><td>10</td><td>10</td><td>10</td></tr>\n</tbody></table>\n",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "A",
+        "C",
+        "Bank"
+      ],
+      "Standard": [
+        "A",
+        "C",
+        "Bank"
+      ],
+      "Hard": [
+        "A",
+        "C",
+        "B and C"
+      ]
+    }
   },
   {
     "id": "quiz-14",
@@ -1264,7 +1606,24 @@ const QUESTIONS = [
     "explanation": "Expected regret is a probability-weighted average, so each regret is multiplied by the probability of the state in which that regret would occur. A regret of 20 occurs 20% of the time and contributes 20 × 0.2 = 4. A regret of 10 occurs 30% of the time and contributes 10 × 0.3 = 3. A regret of 0 occurs 50% of the time and contributes 0 × 0.5 = 0. Adding the contributions gives 4 + 3 + 0 = 7. The probabilities are weights; this is why the calculation is not the simple average of 20, 10, and 0.",
     "citation": "Final - Quizlet Study Guide, specified question. Final Exam Study Guide item 18; expected-value calculation follows Ch. 7 §7-3.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "3",
+        "20",
+        "0"
+      ],
+      "Standard": [
+        "4",
+        "10",
+        "30"
+      ],
+      "Hard": [
+        "6",
+        "8",
+        "9"
+      ]
+    }
   },
   {
     "id": "quiz-15",
@@ -1280,7 +1639,24 @@ const QUESTIONS = [
     "explanation": "Probabilities may be empirical, based on historical data, or subjective, based on informed judgment, experts, interviews, or market research.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Use only regression output.",
+        "Use a shadow price.",
+        "Do not assign probabilities."
+      ],
+      "Standard": [
+        "Use historical data.",
+        "Use best judgements.",
+        "Use interview results."
+      ],
+      "Hard": [
+        "Use historical data only.",
+        "Use best judgment only.",
+        "Use one method and never revise it."
+      ]
+    }
   },
   {
     "id": "quiz-16",
@@ -1296,7 +1672,24 @@ const QUESTIONS = [
     "explanation": "The supplied Quizlet answer says “Logistical Regression.” The standard name is logistic regression. It estimates a probability between 0 and 1 that an observation belongs to a specified category.",
     "citation": "Final - Quizlet Study Guide, specified question. Albright & Winston, 8e, Ch. 16, §16-2b, pp. 803–808.",
     "exhibit": "",
-    "caveat": "The Quizlet contains a wording error: the standard term is logistic regression, not logistical regression."
+    "caveat": "The Quizlet contains a wording error: the standard term is logistic regression, not logistical regression.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Linear programming",
+        "Transportation modeling",
+        "Aggregate planning"
+      ],
+      "Standard": [
+        "Discriminant scoring",
+        "K-means clustering",
+        "Linear programming"
+      ],
+      "Hard": [
+        "Discriminant analysis",
+        "Naive Bayes classification",
+        "K-means clustering"
+      ]
+    }
   },
   {
     "id": "quiz-17",
@@ -1312,7 +1705,24 @@ const QUESTIONS = [
     "explanation": "The exhibit gives an expected monetary value of $70,000 and a certainty equivalent of $44,100. The supplied Quizlet key calculates $44,100 − $70,000 = −$25,900, so the keyed answer is −$25,900. The negative sign comes only from that subtraction order. Under the more common convention, risk premium = EMV − certainty equivalent, the same information would be reported as a positive $25,900—the amount of expected value the decision maker would surrender to replace the risky prospect with a sure amount.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint, §7-7 (“Role of Risk Aversion,” utility, and certainty equivalents); Albright & Winston, 8e, Ch. 7, §7-7, pp. 300–306. Exhibit reconstructed to match the supplied answer.",
     "exhibit": "\n<div class=\"exhibit-title\">Reconstructed Exhibit 14.7 <span>(original exhibit was not included)</span></div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Expected monetary value of gamble</th><td>$70,000</td></tr>\n<tr><th>Certainty equivalent</th><td>$44,100</td></tr>\n</tbody></table>\n",
-    "caveat": "Sign-convention issue: the Quizlet uses CE − EMV; the standard risk-premium convention is usually EMV − CE."
+    "caveat": "Sign-convention issue: the Quizlet uses CE − EMV; the standard risk-premium convention is usually EMV − CE.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "$25,900",
+        "$44,100",
+        "$70,000"
+      ],
+      "Standard": [
+        "$20,000",
+        "$70,000",
+        "$80,000"
+      ],
+      "Hard": [
+        "+$25,900",
+        "-$44,100",
+        "-$70,000"
+      ]
+    }
   },
   {
     "id": "quiz-18",
@@ -1328,7 +1738,24 @@ const QUESTIONS = [
     "explanation": "Discriminant analysis uses observations with known group membership to construct a classification rule, which is then applied to new observations.",
     "citation": "Final - Quizlet Study Guide, specified question. Albright & Winston, 8e, p. 808 notes that discriminant analysis is a classical classification method with the same basic goal as logistic regression; Final Quizlet Q18 and Q32 provide the course-specific wording.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "To minimize shipping costs",
+        "To compute a shadow price",
+        "To schedule employees"
+      ],
+      "Standard": [
+        "To minimize the total cost of a shipping network",
+        "To compute the shadow price of a constraint",
+        "To forecast a continuous time series"
+      ],
+      "Hard": [
+        "To predict a continuous numeric response",
+        "To identify natural unlabeled clusters",
+        "To minimize within-group variance without predicting membership"
+      ]
+    }
   },
   {
     "id": "quiz-19",
@@ -1344,7 +1771,24 @@ const QUESTIONS = [
     "explanation": "Maximin evaluates the minimum payoff for each alternative and then selects the largest of those minima. It therefore protects against the worst payoff in each row.",
     "citation": "Final - Quizlet Study Guide, specified question. Final Exam Study Guide item 17; method verified by payoff-matrix calculations.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "maximax decision rule.",
+        "EMV decision rule.",
+        "Bayes decision rule."
+      ],
+      "Standard": [
+        "maximax decision rule.",
+        "minimax regret decision rule.",
+        "minimin decision rule."
+      ],
+      "Hard": [
+        "minimax regret decision rule.",
+        "minimin decision rule.",
+        "Hurwicz decision rule."
+      ]
+    }
   },
   {
     "id": "quiz-20",
@@ -1360,7 +1804,24 @@ const QUESTIONS = [
     "explanation": "The intended concept is that utility increases with payoff, but at a diminishing rate. A concave utility curve reflects risk aversion: each additional dollar adds less utility than the previous dollar.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint, §7-7 (“Role of Risk Aversion,” utility, and certainty equivalents); Albright & Winston, 8e, Ch. 7, §7-7, pp. 300–306.",
     "exhibit": "",
-    "caveat": "The phrase “largest relative utility to any payoff” is awkward; the key verified concept is diminishing marginal utility."
+    "caveat": "The phrase “largest relative utility to any payoff” is awkward; the key verified concept is diminishing marginal utility.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "smallest; increasing",
+        "zero; constant",
+        "negative; increasing"
+      ],
+      "Standard": [
+        "largest; increasing",
+        "smallest; diminishing",
+        "smallest; increasing"
+      ],
+      "Hard": [
+        "largest; increasing",
+        "smallest; diminishing",
+        "smallest; increasing"
+      ]
+    }
   },
   {
     "id": "quiz-21",
@@ -1376,7 +1837,24 @@ const QUESTIONS = [
     "explanation": "This is the Quizlet’s simplified answer. The 8th-edition book uses a broader list that also includes clustering, market-basket analysis, and forecasting. “Association” corresponds closely to market-basket or affinity analysis.",
     "citation": "Final - Quizlet Study Guide, specified question. Albright & Winston, 8e, Ch. 16, §16-1 and §16-2; Ch. 17, §17-3.",
     "exhibit": "",
-    "caveat": "The supplied answer is a simplified framework; the current textbook lists additional categories."
+    "caveat": "The supplied answer is a simplified framework; the current textbook lists additional categories.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Optimization, simulation, transportation",
+        "Scheduling, blending, logistics",
+        "Sampling, inference, hypothesis testing"
+      ],
+      "Standard": [
+        "Optimization, simulation, sensitivity",
+        "Scheduling, blending, transportation",
+        "Sampling, inference, hypothesis testing"
+      ],
+      "Hard": [
+        "Classification, optimization, simulation",
+        "Prediction, transportation, blending",
+        "Association, hypothesis testing, scheduling"
+      ]
+    }
   },
   {
     "id": "quiz-22",
@@ -1392,7 +1870,24 @@ const QUESTIONS = [
     "explanation": "Maximax does not require probabilities, so it belongs to the non-probabilistic category. It is also commonly described as an optimistic rule, making the wording somewhat ambiguous; the Quizlet expects the broader category label.",
     "citation": "Final - Quizlet Study Guide, specified question. Final Exam Study Guide items 16–17.",
     "exhibit": "",
-    "caveat": "“Optimistic” also accurately describes maximax, but the supplied key classifies it as non-probabilistic."
+    "caveat": "“Optimistic” also accurately describes maximax, but the supplied key classifies it as non-probabilistic.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "regression category.",
+        "integer category.",
+        "transportation category."
+      ],
+      "Standard": [
+        "optimistic category.",
+        "probabilistic category.",
+        "optimality category."
+      ],
+      "Hard": [
+        "probabilistic category.",
+        "expected-value category.",
+        "Bayesian category."
+      ]
+    }
   },
   {
     "id": "quiz-23",
@@ -1408,7 +1903,24 @@ const QUESTIONS = [
     "explanation": "If two predictors are highly redundant, removing one can reduce multicollinearity and simplify the model. Correlation alone does not prove causation, and removal should depend on the modeling purpose and other evidence.",
     "citation": "Final - Quizlet Study Guide, specified question. Albright & Winston, 8e, Ch. 10, §10-4 (multicollinearity).",
     "exhibit": "",
-    "caveat": "This is a possible response, not an automatic rule for every significant correlation."
+    "caveat": "This is a possible response, not an automatic rule for every significant correlation.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Delete the entire data set",
+        "Assume one variable causes the other",
+        "Set both variables equal to zero"
+      ],
+      "Standard": [
+        "Automatically remove both variables",
+        "Conclude that one variable causes the other",
+        "Ignore the correlation in every model"
+      ],
+      "Hard": [
+        "Remove both variables automatically",
+        "Retain both without checking multicollinearity",
+        "Conclude that one variable causes the other"
+      ]
+    }
   },
   {
     "id": "quiz-24",
@@ -1424,7 +1936,24 @@ const QUESTIONS = [
     "explanation": "Decision analysis improves the quality and logic of the decision process, but uncertainty prevents it from guaranteeing a favorable realized outcome.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Help make good decisions.",
+        "Analyze decision problems logically.",
+        "Incorporate problem uncertainty."
+      ],
+      "Standard": [
+        "Help make good decisions.",
+        "Analyze decision problems logically.",
+        "Incorporate problem uncertainty."
+      ],
+      "Hard": [
+        "Structure alternatives and uncertain outcomes.",
+        "Compare consequences logically.",
+        "Use probabilities when appropriate."
+      ]
+    }
   },
   {
     "id": "quiz-25",
@@ -1440,7 +1969,24 @@ const QUESTIONS = [
     "explanation": "All three listed techniques are classification methods. The current textbook discusses logistic regression and neural networks directly and notes discriminant analysis as a classical method with similar goals.",
     "citation": "Final - Quizlet Study Guide, specified question. Albright & Winston, 8e, Ch. 16, §16-2b, pp. 803–808. Albright & Winston, 8e, Ch. 16, §16-2c, pp. 808–812. Albright & Winston, 8e, p. 808 notes that discriminant analysis is a classical classification method with the same basic goal as logistic regression; Final Quizlet Q18 and Q32 provide the course-specific wording.",
     "exhibit": "",
-    "caveat": "The original printed Quizlet omitted the answer choices, so the likely set was reconstructed from the covered methods."
+    "caveat": "The original printed Quizlet omitted the answer choices, so the likely set was reconstructed from the covered methods.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Discriminant analysis",
+        "Logistic regression",
+        "Neural networks"
+      ],
+      "Standard": [
+        "Discriminant analysis",
+        "Logistic regression",
+        "Neural networks"
+      ],
+      "Hard": [
+        "Discriminant analysis",
+        "Logistic regression",
+        "Neural networks"
+      ]
+    }
   },
   {
     "id": "quiz-26",
@@ -1456,7 +2002,24 @@ const QUESTIONS = [
     "explanation": "The Quizlet item is incomplete. The intended idea is that a state of nature is an uncertain future event outside the decision maker’s control; it is observed or revealed after the decision is made.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint §§7-2 to 7-3.",
     "exhibit": "",
-    "caveat": "The source question is a fragment; the explanation supplies the complete concept."
+    "caveat": "The source question is a fragment; the explanation supplies the complete concept.",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Is optimized",
+        "Is chosen by the decision maker",
+        "Is a model constraint"
+      ],
+      "Standard": [
+        "Is selected by the decision maker",
+        "Is always known before a decision is made",
+        "Is the same thing as a decision alternative"
+      ],
+      "Hard": [
+        "Is selected before the decision",
+        "Is controlled by management",
+        "Is identical to a decision alternative"
+      ]
+    }
   },
   {
     "id": "quiz-27",
@@ -1472,7 +2035,24 @@ const QUESTIONS = [
     "explanation": "Cell C5 represents the joint probability for the event in column C and the condition in row 5. Cell D5 is the marginal total for that row—the probability of the event being conditioned on. Conditional probability is joint probability divided by the probability of the given condition, so the formula is =C5/$D5. The dollar signs lock column D when the formula is copied across the table.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint, §7-6a (“Bayes’ Rule”); Albright & Winston, 8e, Ch. 7, §7-6a, pp. 289–293. Exhibit reconstructed from the cell references.",
     "exhibit": "\n<div class=\"exhibit-title\">Reconstructed Exhibit 14.6 spreadsheet snippet</div>\n<table class=\"exhibit-table cells\">\n<thead><tr><th></th><th>B</th><th>C</th><th>D</th></tr></thead>\n<tbody>\n<tr><th>5</th><td>0.08</td><td class=\"highlight\">0.12</td><td class=\"highlight\">0.20</td></tr>\n<tr><th>13</th><td>=B5/$D5</td><td class=\"target\">?</td><td>Row total</td></tr>\n</tbody></table>\n",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "=SUM(C5:D5)",
+        "=C13/$D5",
+        "=C5*$D5"
+      ],
+      "Standard": [
+        "=C5/$D4",
+        "=C5/C$6",
+        "=C4/$D4"
+      ],
+      "Hard": [
+        "=C5/D$5",
+        "=C5/$D$4",
+        "=C4/$D5"
+      ]
+    }
   },
   {
     "id": "quiz-28",
@@ -1488,7 +2068,24 @@ const QUESTIONS = [
     "explanation": "The two outcomes shown make up the entire probability distribution, so their probabilities must sum to 1.00. Therefore, B18 = 1.00 − 0.16 = 0.84. This uses the complement rule: the probability of one of two exhaustive outcomes equals 1 minus the probability of the other.",
     "citation": "Final - Quizlet Study Guide, specified question. Exhibit reconstructed because the original was not supplied; probability total verified.",
     "exhibit": "\n<div class=\"exhibit-title\">Reconstructed Exhibit 3 probability cells <span>(original exhibit was not included)</span></div>\n<table class=\"exhibit-table cells compact\">\n<thead><tr><th>Cell</th><th>Outcome</th><th>Probability</th></tr></thead>\n<tbody>\n<tr><th>B18</th><td>Outcome 1</td><td class=\"target\">?</td></tr>\n<tr><th>B19</th><td>Outcome 2</td><td>0.16</td></tr>\n<tr><th></th><td>Total</td><td>1.00</td></tr>\n</tbody></table>\n",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "0.16",
+        "1.00",
+        "1.16"
+      ],
+      "Standard": [
+        "0.16",
+        "0.50",
+        "1.00"
+      ],
+      "Hard": [
+        "0.82",
+        "0.86",
+        "0.68"
+      ]
+    }
   },
   {
     "id": "quiz-29",
@@ -1504,7 +2101,24 @@ const QUESTIONS = [
     "explanation": "The probabilities for the two exhaustive outcomes must total 1.00. Because B18 is 0.84, the missing probability is B19 = 1.00 − 0.84 = 0.16. A probability of 1.16 would be impossible because probabilities cannot exceed 1.",
     "citation": "Final - Quizlet Study Guide, specified question. Exhibit reconstructed because the original was not supplied; complement calculation verified.",
     "exhibit": "\n<div class=\"exhibit-title\">Reconstructed Exhibit 3 probability cells <span>(original exhibit was not included)</span></div>\n<table class=\"exhibit-table cells compact\">\n<thead><tr><th>Cell</th><th>Outcome</th><th>Probability</th></tr></thead>\n<tbody>\n<tr><th>B18</th><td>Outcome 1</td><td>0.84</td></tr>\n<tr><th>B19</th><td>Outcome 2</td><td class=\"target\">?</td></tr>\n<tr><th></th><td>Total</td><td>1.00</td></tr>\n</tbody></table>\n",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "0.84",
+        "1.00",
+        "-0.16"
+      ],
+      "Standard": [
+        "0.84",
+        "0.50",
+        "1.16"
+      ],
+      "Hard": [
+        "0.14",
+        "0.18",
+        "0.24"
+      ]
+    }
   },
   {
     "id": "quiz-30",
@@ -1520,7 +2134,24 @@ const QUESTIONS = [
     "explanation": "Perfect information allows the investor to choose the best alternative after the state is known. Using the reconstructed exhibit: 0.30(80) + 0.70(50) = 24 + 35 = 59.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint, §7-6b (“Expected Value of Information”); Albright & Winston, 8e, Ch. 7, §7-6b, pp. 293–296. Exhibit reconstructed to reproduce the supplied answer.",
     "exhibit": "\n<div class=\"exhibit-title\">Reconstructed Exhibit 14.4 investor payoff matrix</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Alternative</th><th>Strong market<br><small>p = 0.30</small></th><th>Weak market<br><small>p = 0.70</small></th></tr></thead>\n<tbody>\n<tr><th>Stock</th><td class=\"highlight\">80</td><td>20</td></tr>\n<tr><th>Bond</th><td>45.5</td><td class=\"highlight\">50</td></tr>\n<tr><th>Bank</th><td>13.5</td><td>13.5</td></tr>\n</tbody></table>\n",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "0",
+        "100",
+        "140"
+      ],
+      "Standard": [
+        "13.5",
+        "45.5",
+        "80"
+      ],
+      "Hard": [
+        "58",
+        "60",
+        "45.5"
+      ]
+    }
   },
   {
     "id": "quiz-31",
@@ -1536,7 +2167,24 @@ const QUESTIONS = [
     "explanation": "Maximax first identifies each row’s maximum payoff and then chooses the largest row maximum. It emphasizes the most favorable possible outcome.",
     "citation": "Final - Quizlet Study Guide, specified question. Final Exam Study Guide item 17.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "EMV decision rule.",
+        "Bayes decision rule.",
+        "shadow-price rule."
+      ],
+      "Standard": [
+        "maximin decision rule.",
+        "minimax regret decision rule.",
+        "minimin decision rule."
+      ],
+      "Hard": [
+        "maximin decision rule.",
+        "minimax regret decision rule.",
+        "minimin decision rule."
+      ]
+    }
   },
   {
     "id": "quiz-32",
@@ -1552,7 +2200,24 @@ const QUESTIONS = [
     "explanation": "A group centroid is the point formed by that group’s mean values on the predictor variables. It summarizes the group’s center in multivariable space.",
     "citation": "Final - Quizlet Study Guide, specified question. Albright & Winston, 8e, p. 808 notes that discriminant analysis is a classical classification method with the same basic goal as logistic regression; Final Quizlet Q18 and Q32 provide the course-specific wording.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Payoff matrix",
+        "Shadow price",
+        "Decision node"
+      ],
+      "Standard": [
+        "Logit",
+        "Shadow price",
+        "Regret"
+      ],
+      "Hard": [
+        "Group covariance matrix",
+        "Classification cutoff",
+        "Discriminant coefficient vector"
+      ]
+    }
   },
   {
     "id": "quiz-33",
@@ -1568,7 +2233,24 @@ const QUESTIONS = [
     "explanation": "States of nature are uncertain future conditions such as strong or weak demand. The decision maker chooses an alternative but does not choose which state occurs.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "Objective functions",
+        "Regression residuals",
+        "Decision variables"
+      ],
+      "Standard": [
+        "Decision alternatives",
+        "Objective coefficients",
+        "Shadow prices"
+      ],
+      "Hard": [
+        "Decision alternatives",
+        "Contingency strategies",
+        "Posterior probabilities"
+      ]
+    }
   },
   {
     "id": "quiz-34",
@@ -1585,7 +2267,25 @@ const QUESTIONS = [
     "explanation": "The amount of X1 is compared with 75% of the total blend. “At most” requires ≤. This can be rearranged into a conventional linear expression if desired.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 13 PowerPoint, §13-3 (“Blending Models”); Albright & Winston, 8e, Ch. 13, §13-3, pp. 600–605.",
     "exhibit": "",
-    "caveat": ""
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "X1 + X2 + X3 <= 0.75",
+        "X1 = X2 + X3",
+        "X1 >= X1 + X2 + X3"
+      ],
+      "Standard": [
+        "X1 >= 0.75(X2+X3)",
+        "X1 <= 0.25(X1+X2+X3)",
+        "0.75X1 >= X1+X2+X3",
+        "0.25X1 >= 0.75(X2+X3)"
+      ],
+      "Hard": [
+        "X1 <= 0.75(X2+X3)",
+        "X1 >= 0.75(X1+X2+X3)",
+        "0.75X1 <= 0.25(X2+X3)"
+      ]
+    }
   },
   {
     "id": "quiz-35",
@@ -1601,10 +2301,589 @@ const QUESTIONS = [
     "explanation": "The second subscript identifies week 3, so sum X13, X23, X33, and X43 across employees 1 through 4. “Should not exceed” means the total is ≤ 160.",
     "citation": "Final - Quizlet Study Guide, specified question. Ch. 12 PowerPoint, §§12-2 to 12-5; Albright & Winston, 8e, Ch. 12, §§12-2, 12-5.",
     "exhibit": "",
+    "caveat": "",
+    "distractorsByDifficulty": {
+      "Easy": [
+        "X11 + X21 <= 160",
+        "X13 <= 40",
+        "X31 + X32 + X33 + X34 <= 160"
+      ],
+      "Standard": [
+        "X11 + X12 + X13 + X14 <= 160",
+        "X31 + X32 + X33 + X34 <= 160",
+        "X43 <= 160"
+      ],
+      "Hard": [
+        "X13 + X23 + X33 + X44 <= 160",
+        "X31 + X32 + X33 + X34 <= 160",
+        "X13 + X23 + X33 + X43 >= 160"
+      ]
+    }
+  },
+  {
+    "id": "sg-56",
+    "source": "Study Guide",
+    "sourceRef": "Item 2",
+    "difficulty": "Hard",
+    "question": "A binding capacity constraint has a shadow price of $18 and an allowable increase of 40 units. Capacity is increased by 55 units. What can the sensitivity report justify?",
+    "answer": "The first 40 units predict an objective improvement of $720, but the report alone cannot determine the effect of all 55 units",
+    "distractors": [
+      "All 55 units must improve the objective by exactly $990",
+      "The shadow price becomes zero immediately after the first added unit",
+      "No part of the change can be evaluated with the sensitivity report"
+    ],
+    "explanation": "A shadow price is valid only inside its allowable range. For the first 40 units, the predicted improvement is 40 × $18 = $720. The remaining 15 units move beyond the allowable increase, so the same $18 rate is no longer guaranteed; Solver must be rerun to determine the full effect.",
+    "citation": "Ch. 12 PowerPoint, §12-4a (“Sensitivity Report: Shadow Price”); Albright & Winston, 8e, Ch. 12, §12-4, pp. 550–553.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-57",
+    "source": "Study Guide",
+    "sourceRef": "Item 3",
+    "difficulty": "Hard",
+    "question": "Products A and B must total at least 100 units. A uses 2 machine hours and B uses 4 machine hours, with no more than 300 hours available. Which pair of constraints is correct?",
+    "answer": "A + B ≥ 100 and 2A + 4B ≤ 300",
+    "distractors": [
+      "A + B ≤ 100 and 2A + 4B ≥ 300",
+      "2A + 4B ≥ 100 and A + B ≤ 300",
+      "A + B = 300 and 2A + 4B = 100"
+    ],
+    "explanation": "“At least 100 units” creates A + B ≥ 100. Total machine time is 2A + 4B, and “no more than 300 hours” creates 2A + 4B ≤ 300. The wording of each restriction determines the inequality direction.",
+    "citation": "Ch. 12 PowerPoint, §§12-2 to 12-5; Albright & Winston, 8e, Ch. 12, §§12-2, 12-5.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-58",
+    "source": "Study Guide",
+    "sourceRef": "Item 4",
+    "difficulty": "Standard",
+    "question": "An LP solution is x = 4.6 and y = 2.4, and one constraint is x + y ≤ 7. If both values are rounded to the nearest integers, what is true?",
+    "answer": "The rounded point (5, 2) satisfies this constraint, but it is not automatically the optimal integer solution",
+    "distractors": [
+      "The rounded point violates the constraint because 5 + 2 is greater than 7",
+      "The rounded point is automatically the optimal integer solution",
+      "Rounding cannot change either feasibility or optimality"
+    ],
+    "explanation": "Rounding gives (5, 2), and 5 + 2 = 7, so this particular constraint remains satisfied. However, checking one constraint does not prove the entire model is feasible, and simple rounding does not compare the point with all other feasible integer solutions.",
+    "citation": "Ch. 12 PowerPoint, §§12-2 to 12-5; Albright & Winston, 8e, Ch. 12, §§12-2, 12-5. Ch. 13 PowerPoint, §13-7 (“Integer Optimization Models”); Albright & Winston, 8e, Ch. 13, §13-7, pp. 639–657.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-59",
+    "source": "Study Guide",
+    "sourceRef": "Item 4",
+    "difficulty": "Hard",
+    "question": "In a maximization problem, the LP relaxation has an optimal objective value of $1,250, while the best feasible integer solution found has value $1,210. What can be concluded?",
+    "answer": "The LP value is an upper bound on the integer optimum, and the current gap is $40",
+    "distractors": [
+      "The integer solution must be infeasible because its objective is lower",
+      "Rounding the LP solution must produce an objective of exactly $1,250",
+      "The integer optimum must be greater than $1,250"
+    ],
+    "explanation": "For a maximization problem, removing integer restrictions enlarges the feasible region, so the LP relaxation cannot have a lower optimum than the integer model. Therefore, $1,250 is an upper bound and $1,250 − $1,210 = $40 is the remaining gap.",
+    "citation": "Ch. 12 PowerPoint, §§12-2 to 12-5; Albright & Winston, 8e, Ch. 12, §§12-2, 12-5. Ch. 13 PowerPoint, §13-7 (“Integer Optimization Models”); Albright & Winston, 8e, Ch. 13, §13-7, pp. 639–657.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-60",
+    "source": "Study Guide",
+    "sourceRef": "Item 5",
+    "difficulty": "Standard",
+    "question": "In a repeating weekly employee-scheduling model, what are the most useful decision variables?",
+    "answer": "The number of employees assigned to each allowable repeating shift pattern",
+    "distractors": [
+      "The probability that each employee reports to work",
+      "The shadow price for every day of the week",
+      "The forecast error for each employee"
+    ],
+    "explanation": "The model chooses how many employees start or work each allowable shift pattern. Those choices determine how many workers are available on each day, which are then compared with the daily staffing requirements.",
+    "citation": "Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-61",
+    "source": "Study Guide",
+    "sourceRef": "Item 5",
+    "difficulty": "Hard",
+    "question": "Employees work five consecutive days and then receive two days off. An employee whose shift begins Wednesday works on which days?",
+    "answer": "Wednesday through Sunday",
+    "distractors": [
+      "Wednesday through Friday only",
+      "Monday through Friday",
+      "Wednesday, Thursday, Friday, Monday, and Tuesday"
+    ],
+    "explanation": "Five consecutive workdays beginning Wednesday are Wednesday, Thursday, Friday, Saturday, and Sunday. Monday and Tuesday are the two days off. Static scheduling models build these repeating coverage patterns into the constraints.",
+    "citation": "Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-62",
+    "source": "Study Guide",
+    "sourceRef": "Item 6",
+    "difficulty": "Standard",
+    "question": "Which business problem is most naturally formulated as a linear programming model?",
+    "answer": "Choosing product quantities to maximize profit subject to labor and material limits",
+    "distractors": [
+      "Testing whether a population mean equals a target value",
+      "Estimating a regression coefficient from sample data",
+      "Forecasting next month’s sales from a time-series pattern"
+    ],
+    "explanation": "A product-mix problem has controllable quantities, a linear profit objective, and resource constraints, which are the standard ingredients of LP. The other choices are statistical inference or forecasting problems.",
+    "citation": "Ch. 12 PowerPoint, §12-2 (“Introduction to Optimization”); Albright & Winston, 8e, Ch. 12, §12-2, pp. 537–538. Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-63",
+    "source": "Study Guide",
+    "sourceRef": "Item 6",
+    "difficulty": "Hard",
+    "question": "A refinery chooses crude-oil quantities, a distributor chooses shipment quantities, and a retailer predicts next quarter’s sales. Which activity is not primarily an LP application?",
+    "answer": "Predicting next quarter’s sales",
+    "distractors": [
+      "Choosing crude-oil quantities",
+      "Choosing shipment quantities",
+      "Both choosing crude-oil quantities and choosing shipment quantities"
+    ],
+    "explanation": "Crude-oil mixing is a blending model and shipment allocation is a logistics model; both are common LP applications. Predicting future sales is a forecasting task, although its forecast may later become an input to an optimization model.",
+    "citation": "Ch. 12 PowerPoint, §12-2 (“Introduction to Optimization”); Albright & Winston, 8e, Ch. 12, §12-2, pp. 537–538. Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-64",
+    "source": "Study Guide",
+    "sourceRef": "Item 7",
+    "difficulty": "Standard",
+    "question": "A scheduling model produces two different staffing plans, each using 23 employees, and no feasible plan uses fewer. What does this show?",
+    "answer": "The model has multiple optimal solutions",
+    "distractors": [
+      "The model is infeasible",
+      "The objective function is unbounded",
+      "One of the two plans must be nonoptimal because the decision variables differ"
+    ],
+    "explanation": "The two plans use different decision-variable values but tie at the best possible objective value of 23 employees. That is precisely what multiple optimal solutions means.",
+    "citation": "Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-65",
+    "source": "Study Guide",
+    "sourceRef": "Item 7",
+    "difficulty": "Hard",
+    "question": "Why can multiple optimal solutions be valuable to a manager?",
+    "answer": "The manager can choose among equally optimal quantitative solutions using practical nonquantitative considerations",
+    "distractors": [
+      "They prove that every feasible solution is optimal",
+      "They eliminate the need to satisfy the model’s constraints",
+      "They guarantee that all shadow prices are identical"
+    ],
+    "explanation": "When several solutions tie on the objective, the model does not distinguish between them. A manager can then consider fairness, preferred workdays, operational simplicity, or other factors that were not included in the objective function.",
+    "citation": "Ch. 13 PowerPoint, §13-2 (“Employee Scheduling Models” and “Modeling Issues”); Albright & Winston, 8e, Ch. 13, §13-2, pp. 593–599.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-66",
+    "source": "Study Guide",
+    "sourceRef": "Item 8",
+    "difficulty": "Standard",
+    "question": "In a least-cost blending model, what do the decision variables usually represent?",
+    "answer": "The amounts of the available ingredients placed in the final blend",
+    "distractors": [
+      "The probability of each state of nature",
+      "The number of regression observations",
+      "The regret associated with each ingredient"
+    ],
+    "explanation": "The model chooses ingredient quantities. Their costs form the objective, while availability, total-volume, and quality or composition requirements form the constraints.",
+    "citation": "Ch. 13 PowerPoint, §13-3 (“Blending Models”); Albright & Winston, 8e, Ch. 13, §13-3, pp. 600–605.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-67",
+    "source": "Study Guide",
+    "sourceRef": "Item 8",
+    "difficulty": "Hard",
+    "question": "Why is an average-quality requirement often written as total quality units ≥ required average × total blend quantity?",
+    "answer": "It avoids a ratio and preserves a linear constraint",
+    "distractors": [
+      "It forces every ingredient to have exactly the required quality",
+      "It converts the model into a decision tree",
+      "It removes the need for decision variables"
+    ],
+    "explanation": "The direct average is a ratio such as total quality units divided by total quantity. Multiplying both sides by total quantity produces an equivalent form such as 10x₁ + 5x₂ ≥ 8(x₁ + x₂), which remains linear.",
+    "citation": "Ch. 13 PowerPoint, §13-3 (“Blending Models”); Albright & Winston, 8e, Ch. 13, §13-3, pp. 600–605.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-68",
+    "source": "Study Guide",
+    "sourceRef": "Item 9",
+    "difficulty": "Standard",
+    "question": "Ingredient A must make up at least 30% of a blend containing A, B, and C. Which constraint is correct?",
+    "answer": "A ≥ 0.30(A + B + C)",
+    "distractors": [
+      "A ≤ 0.30(A + B + C)",
+      "A + B + C ≥ 0.30",
+      "0.30A ≥ A + B + C"
+    ],
+    "explanation": "The amount of A is compared with 30% of the entire blend. The phrase “at least” requires A to be greater than or equal to that percentage of the total.",
+    "citation": "Ch. 13 PowerPoint, §13-3 (“Blending Models”); Albright & Winston, 8e, Ch. 13, §13-3, pp. 600–605.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-69",
+    "source": "Study Guide",
+    "sourceRef": "Item 12",
+    "difficulty": "Hard",
+    "question": "A binary variable y indicates whether a facility opens, and x is the amount produced there. What does the linking constraint x ≤ My accomplish when M is a valid large capacity?",
+    "answer": "It forces x = 0 when y = 0 and permits production up to M when y = 1",
+    "distractors": [
+      "It forces the facility to open whenever x = 0",
+      "It makes x and y continuous variables",
+      "It guarantees x = M whenever y = 1"
+    ],
+    "explanation": "If y = 0, the constraint becomes x ≤ 0, so nonnegative x must equal zero. If y = 1, the constraint becomes x ≤ M, allowing production without forcing it to equal the maximum.",
+    "citation": "Ch. 13 PowerPoint, §13-7 (“Integer Optimization Models”); Albright & Winston, 8e, Ch. 13, §13-7, pp. 639–657.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-70",
+    "source": "Study Guide",
+    "sourceRef": "Item 13",
+    "difficulty": "Standard",
+    "question": "What does one cell inside a payoff matrix represent?",
+    "answer": "The consequence of choosing one decision alternative when one particular state of nature occurs",
+    "distractors": [
+      "The probability of choosing the decision alternative",
+      "The shadow price of a model constraint",
+      "The number of observations in a regression sample"
+    ],
+    "explanation": "Each row-column intersection combines one controllable decision with one uncontrollable state. The number in the cell is the resulting payoff, profit, cost, or other consequence.",
+    "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-71",
+    "source": "Study Guide",
+    "sourceRef": "Item 13",
+    "difficulty": "Hard",
+    "question": "In a payoff matrix, which dimension is controlled by the decision maker and which is not?",
+    "answer": "Decision alternatives are controlled; states of nature are not",
+    "distractors": [
+      "States of nature are controlled; decision alternatives are not",
+      "Both dimensions are controlled",
+      "Neither dimension is relevant to the decision"
+    ],
+    "explanation": "The decision maker selects an alternative before uncertainty is resolved. The state of nature is a future condition outside the decision maker’s control.",
+    "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-72",
+    "source": "Study Guide",
+    "sourceRef": "Item 14",
+    "difficulty": "Standard",
+    "question": "A company is evaluating a new product with no close historical precedent. Which probability method is most appropriate?",
+    "answer": "Use informed subjective estimates from managers, experts, interviews, or market research",
+    "distractors": [
+      "Assume all states have probability zero",
+      "Use only a shadow price from an LP model",
+      "Refuse to assign probabilities under any circumstances"
+    ],
+    "explanation": "When relevant historical frequencies are unavailable, subjective probabilities are appropriate. They should still be based on informed evidence such as expert judgment, interviews, or research rather than arbitrary guesses.",
+    "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-73",
+    "source": "Study Guide",
+    "sourceRef": "Item 14",
+    "difficulty": "Hard",
+    "question": "Historical demand data exist, but a major market change makes the past only partly relevant. What is the best approach to assigning state probabilities?",
+    "answer": "Use the historical evidence as a starting point and adjust it with informed judgment about the changed conditions",
+    "distractors": [
+      "Use the historical percentages without considering the market change",
+      "Discard all evidence and assign every state the same probability",
+      "Choose probabilities that maximize the preferred decision’s EMV"
+    ],
+    "explanation": "Probabilities can contain both empirical and subjective components. Historical frequencies provide evidence, but informed judgment is needed when structural changes make the past an imperfect guide.",
+    "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-74",
+    "source": "Study Guide",
+    "sourceRef": "Item 15",
+    "difficulty": "Hard",
+    "question": "A manager follows a sound decision-analysis process, chooses the alternative with the highest EMV, and then receives a poor outcome. Was the decision necessarily bad?",
+    "answer": "No; a good decision process can still produce a poor realized outcome because the state of nature is uncertain",
+    "distractors": [
+      "Yes; a good decision always guarantees the best outcome",
+      "Yes; EMV can be used only after the outcome is known",
+      "No; because the manager controls the state of nature"
+    ],
+    "explanation": "Decision quality and outcome quality are different. The manager controls the choice but not the state that occurs. Decision analysis improves the logic of the choice; it does not eliminate uncertainty.",
+    "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-75",
+    "source": "Study Guide",
+    "sourceRef": "Item 16",
+    "difficulty": "Standard",
+    "question": "Which pair consists of probabilistic decision criteria?",
+    "answer": "Expected monetary value and expected regret",
+    "distractors": [
+      "Maximax and maximin",
+      "Maximin and minimax regret",
+      "Maximax and minimax regret"
+    ],
+    "explanation": "EMV and expected regret weight outcomes by state probabilities. Maximax, maximin, and minimax regret can be applied without probabilities and are therefore non-probabilistic.",
+    "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277. Final Exam Study Guide items 16–19.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-76",
+    "source": "Study Guide",
+    "sourceRef": "Item 16",
+    "difficulty": "Hard",
+    "question": "If only the probabilities of the states of nature change while the payoff matrix stays fixed, which statement is correct?",
+    "answer": "EMV and expected-regret choices can change, while maximax, maximin, and minimax-regret choices do not depend on those probabilities",
+    "distractors": [
+      "All decision rules must change their selected alternative",
+      "Only maximax changes because it uses the largest probability",
+      "No probabilistic rule can change unless the payoffs also change"
+    ],
+    "explanation": "Probabilistic rules use the probabilities as weights, so changing the weights can change their rankings. The three non-probabilistic rules use only the payoff or regret values, not the probability assignments.",
+    "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277. Final Exam Study Guide items 16–19.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-77",
+    "source": "Study Guide",
+    "sourceRef": "Item 18",
+    "difficulty": "Hard",
+    "question": "The best EMV without perfect information is 42, and the expected value with perfect information is 55. What is the minimum expected opportunity loss?",
+    "answer": "13",
+    "distractors": [
+      "42",
+      "55",
+      "97"
+    ],
+    "explanation": "The minimum expected opportunity loss equals the expected value of perfect information. Here, EVPI = 55 − 42 = 13, so the optimal decision’s expected regret is 13.",
+    "citation": "Final Exam Study Guide item 18; Final Quizlet Q14; probability-weighted calculation follows Ch. 7’s expected-value framework.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-78",
+    "source": "Study Guide",
+    "sourceRef": "Item 19",
+    "difficulty": "Hard",
+    "question": "Project A pays 100 with probability 0.5 and 0 otherwise. Project B pays 60 for certain. Which project is selected by the EMV criterion?",
+    "answer": "Project B, because its EMV is 60 versus 50 for Project A",
+    "distractors": [
+      "Project A, because its best payoff is 100",
+      "Project A, because both projects have EMV 60",
+      "The projects are tied because each has two possible outcomes"
+    ],
+    "explanation": "Project A has EMV 100(0.5) + 0(0.5) = 50. Project B is certain, so its EMV is 60. An EMV decision maker selects the larger value, Project B.",
+    "citation": "Ch. 7 PowerPoint, §§7-1 to 7-3; Albright & Winston, 8e, Ch. 7, §§7-1 to 7-3, pp. 269–277.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-79",
+    "source": "Study Guide",
+    "sourceRef": "Item 20",
+    "difficulty": "Hard",
+    "question": "When folding back a decision tree, what operation is performed at a probability node and at a decision node?",
+    "answer": "Calculate a probability-weighted value at the probability node, then retain the best branch at the decision node",
+    "distractors": [
+      "Choose the best branch at both types of nodes",
+      "Average branches equally at both types of nodes",
+      "Calculate shadow prices at the probability node and regrets at the decision node"
+    ],
+    "explanation": "A circle represents uncertainty, so its branches are combined using conditional probabilities. A square represents a choice, so the branch with the best folded-back value is retained.",
+    "citation": "Ch. 7 PowerPoint, §7-3 (“Decision Tree Conventions” and “Folding-Back Procedure”); Albright & Winston, 8e, Ch. 7, §7-3.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-80",
+    "source": "Study Guide",
+    "sourceRef": "Item 21",
+    "difficulty": "Hard",
+    "question": "A market study has EVSI of $380,000 and costs $250,000. What is its net value, and should it be purchased based only on expected value?",
+    "answer": "$130,000 net value; yes",
+    "distractors": [
+      "$630,000 net value; yes",
+      "$130,000 net value; no",
+      "-$130,000 net value; no"
+    ],
+    "explanation": "Net value of sample information = EVSI − cost = $380,000 − $250,000 = $130,000. Because the net expected value is positive, purchasing the study improves expected value by $130,000.",
+    "citation": "Ch. 7 PowerPoint, §7-6b (“Expected Value of Information”); Albright & Winston, 8e, Ch. 7, §7-6b, pp. 293–296.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-81",
+    "source": "Study Guide",
+    "sourceRef": "Item 23",
+    "difficulty": "Standard",
+    "question": "Which utility-curve shapes correspond to risk attitudes?",
+    "answer": "Concave for risk-averse, linear for risk-neutral, and convex for risk-loving",
+    "distractors": [
+      "Convex for risk-averse, linear for risk-loving, and concave for risk-neutral",
+      "Linear for all three attitudes",
+      "Concave for risk-loving and convex for risk-averse"
+    ],
+    "explanation": "A concave curve has diminishing marginal utility and represents risk aversion. Linear utility treats dollars proportionally and represents risk neutrality. A convex curve has increasing marginal utility and represents risk-loving behavior.",
+    "citation": "Ch. 7 PowerPoint, §7-7 (“Role of Risk Aversion,” utility, and certainty equivalents); Albright & Winston, 8e, Ch. 7, §7-7, pp. 300–306.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-82",
+    "source": "Study Guide",
+    "sourceRef": "Item 23",
+    "difficulty": "Hard",
+    "question": "Two gambles have the same EMV, but Gamble A has a much wider spread of possible outcomes than Gamble B. Which choice is most consistent with risk aversion?",
+    "answer": "Prefer Gamble B because it provides the same EMV with less risk",
+    "distractors": [
+      "Prefer Gamble A because it has more extreme outcomes",
+      "Be indifferent because risk attitude never matters when EMVs are equal",
+      "Prefer whichever gamble has the larger number of possible outcomes"
+    ],
+    "explanation": "A risk-averse decision maker generally prefers less dispersion when expected values are equal. The lower-risk gamble has a higher certainty equivalent for that decision maker.",
+    "citation": "Ch. 7 PowerPoint, §7-7 (“Role of Risk Aversion,” utility, and certainty equivalents); Albright & Winston, 8e, Ch. 7, §7-7, pp. 300–306.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-83",
+    "source": "Study Guide",
+    "sourceRef": "Item 24",
+    "difficulty": "Hard",
+    "question": "A gamble has EMV of $100,000 and certainty equivalent of $115,000. What is the standard risk premium, and what attitude does this suggest?",
+    "answer": "-$15,000; risk-loving",
+    "distractors": [
+      "$15,000; risk-averse",
+      "$215,000; risk-neutral",
+      "$0; risk-neutral"
+    ],
+    "explanation": "Using risk premium = EMV − certainty equivalent gives $100,000 − $115,000 = -$15,000. A certainty equivalent above EMV means the person values the risky prospect more than its expected value, which is consistent with risk-loving behavior.",
+    "citation": "Ch. 7 PowerPoint, §7-7 (“Role of Risk Aversion,” utility, and certainty equivalents); Albright & Winston, 8e, Ch. 7, §7-7, pp. 300–306.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-84",
+    "source": "Study Guide",
+    "sourceRef": "Item 25",
+    "difficulty": "Hard",
+    "question": "Match the tasks correctly: labeling email as spam, grouping customers without known labels, and finding products purchased together.",
+    "answer": "Classification; clustering; association or market-basket analysis",
+    "distractors": [
+      "Clustering; classification; forecasting",
+      "Prediction; optimization; regression",
+      "Association; classification; transportation"
+    ],
+    "explanation": "Spam is a known categorical target, so it is classification. Discovering natural customer groups without labels is clustering. Finding co-purchases is association or market-basket analysis.",
+    "citation": "Albright & Winston, 8e, Ch. 16, §16-1 and §16-2; Ch. 17, §17-3.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-85",
+    "source": "Study Guide",
+    "sourceRef": "Item 26",
+    "difficulty": "Hard",
+    "question": "A discriminant model produces scores of 1.8 for Group A, 0.7 for Group B, and -0.2 for Group C for a new observation. How is the observation classified?",
+    "answer": "Group A, because it has the highest discriminant score",
+    "distractors": [
+      "Group C, because it has the smallest score",
+      "Group B, because its score is closest to zero",
+      "The observation cannot be classified from discriminant scores"
+    ],
+    "explanation": "The classification rule assigns the new observation to the group with the strongest discriminant score or highest estimated membership support. Here, Group A has the largest score, 1.8.",
+    "citation": "Albright & Winston, 8e, p. 808 notes that discriminant analysis is a classical classification method with the same basic goal as logistic regression; Final Quizlet Q18 and Q32 provide the course-specific wording.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-86",
+    "source": "Study Guide",
+    "sourceRef": "Item 27",
+    "difficulty": "Hard",
+    "question": "A logistic-regression coefficient is approximately 0.693. Holding other variables constant, what does exp(0.693) ≈ 2 imply?",
+    "answer": "A one-unit increase in the predictor approximately doubles the odds of category 1",
+    "distractors": [
+      "A one-unit increase doubles the probability in every case",
+      "The probability of category 1 is exactly 0.693",
+      "The predictor has no effect because the coefficient is below 1"
+    ],
+    "explanation": "Logistic coefficients act on log odds. Exponentiating the coefficient converts it to an odds multiplier. Because e^0.693 is about 2, the odds—not necessarily the probability—are multiplied by about two.",
+    "citation": "Albright & Winston, 8e, Ch. 16, §16-2b, pp. 803–808.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-87",
+    "source": "Study Guide",
+    "sourceRef": "Item 28",
+    "difficulty": "Hard",
+    "question": "Which comparison between k-nearest neighbors and a neural network is correct?",
+    "answer": "K-nearest neighbors classifies from nearby known observations, while a neural network learns weighted nonlinear relationships through connected layers",
+    "distractors": [
+      "Both methods require a payoff matrix and state probabilities",
+      "K-nearest neighbors uses hidden layers, while neural networks use only distance to stored cases",
+      "Neither method can perform classification"
+    ],
+    "explanation": "K-nearest neighbors is a local similarity method: the nearby cases vote. A neural network estimates weights through interconnected nodes and can represent complex nonlinear patterns.",
+    "citation": "Albright & Winston, 8e, Ch. 17, Problem 9, pp. 844–845 (nearest-neighbor approach).",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "sg-88",
+    "source": "Study Guide",
+    "sourceRef": "Item 29",
+    "difficulty": "Hard",
+    "question": "Of 1,000 baskets, 200 contain X, 150 contain Y, and 80 contain both. For the rule X → Y, what are confidence and lift?",
+    "answer": "Confidence = 0.40 and lift ≈ 2.67",
+    "distractors": [
+      "Confidence = 0.08 and lift = 0.40",
+      "Confidence = 0.53 and lift = 0.08",
+      "Confidence = 0.15 and lift = 1.00"
+    ],
+    "explanation": "Confidence is P(Y|X) = 80/200 = 0.40. The overall frequency of Y is 150/1,000 = 0.15. Lift = 0.40/0.15 ≈ 2.67, meaning Y occurs with X about 2.67 times as often as expected from Y’s overall rate.",
+    "citation": "Albright & Winston, 8e, Ch. 17, §17-3, pp. 840–843.",
+    "exhibit": "",
     "caveat": ""
   }
 ];
-const DEFAULT_ORDER = QUESTIONS.map((_, i) => i);
+const DIFFICULTY_ORDER = ['Easy', 'Standard', 'Hard'];
+const DIFFICULTY_RANK = { Easy: 0, Standard: 1, Hard: 2 };
 
 let order = [];
 let pos = 0;
@@ -1613,10 +2892,23 @@ let currentChoices = [];
 let currentMode = 'full';
 let lastMissed = [];
 let favorites = new Set();
+let selectedDifficulties = new Set(DIFFICULTY_ORDER);
+let quizletEnabled = true;
 
 try {
   const saved = JSON.parse(localStorage.getItem('bual5380FinalFavorites') || '[]');
   if (Array.isArray(saved)) favorites = new Set(saved);
+} catch (e) {}
+
+try {
+  const savedLevels = JSON.parse(localStorage.getItem('bual5380FinalDifficulties') || '[]');
+  const valid = Array.isArray(savedLevels) ? savedLevels.filter(x => DIFFICULTY_ORDER.includes(x)) : [];
+  if (valid.length) selectedDifficulties = new Set(valid);
+} catch (e) {}
+
+try {
+  const savedQuizletState = localStorage.getItem('bual5380FinalQuizletEnabled');
+  if (savedQuizletState === 'false') quizletEnabled = false;
 } catch (e) {}
 
 const els = {
@@ -1636,6 +2928,8 @@ const els = {
   feedback: document.getElementById('feedback'),
   exhibit: document.getElementById('exhibit'),
   sourceBadge: document.getElementById('sourceBadge'),
+  difficultyBadge: document.getElementById('difficultyBadge'),
+  difficultyButtons: [...document.querySelectorAll('.difficulty-toggle')],
   favoriteBtn: document.getElementById('favoriteBtn'),
   prev: document.getElementById('prevBtn'),
   next: document.getElementById('nextBtn'),
@@ -1648,7 +2942,8 @@ const els = {
   fullRestartBtn: document.getElementById('fullRestartBtn'),
   restartBtn: document.getElementById('restartBtn'),
   shuffleBtn: document.getElementById('shuffleBtn'),
-  starredBtn: document.getElementById('starredBtn')
+  starredBtn: document.getElementById('starredBtn'),
+  quizletToggleBtn: document.getElementById('quizletToggleBtn')
 };
 
 function shuffle(arr) {
@@ -1660,16 +2955,107 @@ function shuffle(arr) {
   return copy;
 }
 
+function numericRef(item) {
+  const match = String(item.sourceRef || '').match(/\d+/);
+  return match ? Number(match[0]) : 9999;
+}
+
+function stableQuestionOrder(indices) {
+  return [...indices].sort((a, b) => {
+    const qa = QUESTIONS[a];
+    const qb = QUESTIONS[b];
+    const sourceDifference = (qa.source === 'Study Guide' ? 0 : 1) - (qb.source === 'Study Guide' ? 0 : 1);
+    if (sourceDifference) return sourceDifference;
+    const refDifference = numericRef(qa) - numericRef(qb);
+    if (refDifference) return refDifference;
+    if (qa.source === 'Study Guide') {
+      const difficultyDifference = DIFFICULTY_RANK[qa.difficulty] - DIFFICULTY_RANK[qb.difficulty];
+      if (difficultyDifference) return difficultyDifference;
+    }
+    return qa.id.localeCompare(qb.id);
+  });
+}
+
+function buildDefaultOrder() {
+  const indices = QUESTIONS.map((_, i) => i).filter(i => {
+    const q = QUESTIONS[i];
+    if (q.source === 'Quizlet') return quizletEnabled;
+    return selectedDifficulties.has(q.difficulty);
+  });
+  return stableQuestionOrder(indices);
+}
+
 function persistFavorites() {
   try { localStorage.setItem('bual5380FinalFavorites', JSON.stringify([...favorites])); } catch (e) {}
 }
 
+function persistDifficulties() {
+  try {
+    const ordered = DIFFICULTY_ORDER.filter(level => selectedDifficulties.has(level));
+    localStorage.setItem('bual5380FinalDifficulties', JSON.stringify(ordered));
+  } catch (e) {}
+}
+
+function renderDifficultyControls() {
+  els.difficultyButtons.forEach(btn => {
+    const level = btn.dataset.difficulty;
+    const active = selectedDifficulties.has(level);
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+}
+
+function persistQuizletToggle() {
+  try {
+    localStorage.setItem('bual5380FinalQuizletEnabled', quizletEnabled ? 'true' : 'false');
+  } catch (e) {}
+}
+
+function renderQuizletToggle() {
+  els.quizletToggleBtn.textContent = quizletEnabled ? 'Quizlet: On' : 'Quizlet: Off';
+  els.quizletToggleBtn.setAttribute('aria-pressed', quizletEnabled ? 'true' : 'false');
+  els.quizletToggleBtn.classList.toggle('btn-toggle-off', !quizletEnabled);
+}
+
+function toggleQuizletSection() {
+  quizletEnabled = !quizletEnabled;
+  persistQuizletToggle();
+  renderQuizletToggle();
+  lastMissed = [];
+  start(null, 'full', false);
+}
+
+function toggleDifficulty(level) {
+  if (selectedDifficulties.has(level)) {
+    if (selectedDifficulties.size === 1) return;
+    selectedDifficulties.delete(level);
+  } else {
+    selectedDifficulties.add(level);
+  }
+  persistDifficulties();
+  renderDifficultyControls();
+  lastMissed = [];
+  start(null, 'full', false);
+}
+
 function favoriteIndices() {
-  return DEFAULT_ORDER.filter(i => favorites.has(QUESTIONS[i].id));
+  const indices = QUESTIONS
+    .map((q, i) => {
+      if (!favorites.has(q.id)) return -1;
+      if (q.source === 'Quizlet' && !quizletEnabled) return -1;
+      return i;
+    })
+    .filter(i => i >= 0);
+  return stableQuestionOrder(indices);
+}
+
+function effectiveDifficulty(qIndex) {
+  const item = QUESTIONS[qIndex];
+  return item.source === 'Quizlet' ? 'Fixed' : item.difficulty;
 }
 
 function start(source = null, mode = 'full', shouldShuffle = false) {
-  const base = source ? [...source] : [...DEFAULT_ORDER];
+  const base = source ? stableQuestionOrder(source) : buildDefaultOrder();
   order = shouldShuffle ? shuffle(base) : base;
   pos = 0;
   states = {};
@@ -1679,7 +3065,7 @@ function start(source = null, mode = 'full', shouldShuffle = false) {
   els.resultsCard.classList.remove('show');
   if (!order.length) {
     els.resultsCard.classList.add('show');
-    els.resultSummary.textContent = 'No questions are starred yet. Use the star button on any question, then choose Study Starred.';
+    els.resultSummary.textContent = 'No questions are available in this set.';
     els.missedList.innerHTML = '<li>No active questions.</li>';
     updateStats();
     return;
@@ -1695,11 +3081,17 @@ function stats() {
   return { answered, correct, pct };
 }
 
+function difficultySummary() {
+  return DIFFICULTY_ORDER.filter(level => selectedDifficulties.has(level)).join(' + ');
+}
+
 function modeLabel() {
-  if (currentMode === 'shuffled') return 'Shuffled full practice';
-  if (currentMode === 'starred') return 'Starred-question practice';
-  if (currentMode === 'missed') return 'Missed-question practice';
-  return 'Full practice · fixed order';
+  const mix = difficultySummary();
+  const quizletState = quizletEnabled ? 'Quizlet on' : 'Quizlet off';
+  if (currentMode === 'shuffled') return `Shuffled · Study Guide: ${mix} · ${quizletState}`;
+  if (currentMode === 'starred') return `Starred practice · Study Guide: ${mix} · ${quizletState}`;
+  if (currentMode === 'missed') return `Missed practice · Study Guide: ${mix} · ${quizletState}`;
+  return `Fixed order · Study Guide: ${mix} · ${quizletState}`;
 }
 
 function updateStats() {
@@ -1726,10 +3118,12 @@ function render() {
   const qIndex = order[pos];
   const item = QUESTIONS[qIndex];
   const saved = states[qIndex];
+  const difficulty = saved?.difficulty || effectiveDifficulty(qIndex);
 
   if (!saved || !saved.choices) {
-    currentChoices = shuffle([item.answer, ...item.distractors]);
-    states[qIndex] = { choices: currentChoices };
+    const distractors = item.distractors;
+    currentChoices = shuffle([...new Set([item.answer, ...distractors])]);
+    states[qIndex] = { choices: currentChoices, difficulty };
   } else {
     currentChoices = saved.choices;
   }
@@ -1738,6 +3132,15 @@ function render() {
   els.quizCard.classList.toggle('source-quizlet', isQuizlet);
   els.sourceBadge.className = 'source-badge ' + (isQuizlet ? 'quizlet' : 'guide');
   els.sourceBadge.textContent = `${item.source} · ${item.sourceRef}`;
+
+  const shownDifficulty = states[qIndex].difficulty;
+  if (isQuizlet) {
+    els.difficultyBadge.style.display = 'none';
+  } else {
+    els.difficultyBadge.style.display = 'inline-flex';
+    els.difficultyBadge.className = 'difficulty-badge ' + shownDifficulty.toLowerCase();
+    els.difficultyBadge.textContent = shownDifficulty;
+  }
 
   const isFavorite = favorites.has(item.id);
   els.favoriteBtn.classList.toggle('active', isFavorite);
@@ -1852,6 +3255,8 @@ els.starredBtn.addEventListener('click', () => start(favoriteIndices(), 'starred
 els.fullRestartBtn.addEventListener('click', () => { lastMissed = []; start(null, 'full', false); });
 els.practiceMissedBtn.addEventListener('click', () => { if (lastMissed.length) start(lastMissed, 'missed', false); });
 els.practiceStarredBtn.addEventListener('click', () => start(favoriteIndices(), 'starred', false));
+els.difficultyButtons.forEach(btn => btn.addEventListener('click', () => toggleDifficulty(btn.dataset.difficulty)));
+els.quizletToggleBtn.addEventListener('click', toggleQuizletSection);
 
 document.addEventListener('keydown', e => {
   if (els.quizCard.style.display === 'none') return;
@@ -1859,7 +3264,10 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') next();
 });
 
+renderDifficultyControls();
+renderQuizletToggle();
 start(null, 'full', false);
 </script>
+
 </body>
 </html>
