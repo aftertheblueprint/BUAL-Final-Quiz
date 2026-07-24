@@ -21,6 +21,8 @@
     --guide-soft: #ccfbf1;
     --quizlet: #7c3aed;
     --quizlet-soft: #ede9fe;
+    --a7: #b45309;
+    --a7-soft: #fef3c7;
     --star: #d97706;
     --shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
   }
@@ -107,8 +109,10 @@
   .legend-dot { width: 10px; height: 10px; border-radius: 999px; }
   .legend-dot.guide { background: var(--guide); }
   .legend-dot.quizlet { background: var(--quizlet); }
+  .legend-dot.a7 { background: var(--a7); }
   .card { background: var(--card); border: 1px solid var(--border); border-top: 5px solid var(--guide); border-radius: 24px; padding: 24px; box-shadow: var(--shadow); transition: border-color .2s ease; }
   .card.source-quizlet { border-top-color: var(--quizlet); }
+  .card.source-a7 { border-top-color: var(--a7); }
   #quizCard {
     height: 760px;
     display: flex;
@@ -127,6 +131,7 @@
   .source-badge { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border-radius: 999px; font-size: 0.82rem; font-weight: 800; }
   .source-badge.guide { color: #115e59; background: var(--guide-soft); }
   .source-badge.quizlet { color: #5b21b6; background: var(--quizlet-soft); }
+  .source-badge.a7 { color: #92400e; background: var(--a7-soft); }
   .favorite-btn { width: 44px; height: 42px; padding: 0; display: grid; place-items: center; font-size: 1.55rem; background: white; color: #94a3b8; border: 1px solid var(--border); }
   .favorite-btn.active { color: var(--star); background: #fffbeb; border-color: #f59e0b; }
   .progress-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--muted); font-weight: 700; margin-bottom: 14px; }
@@ -199,13 +204,15 @@
   <section class="hero">
     <div>
       <h1>BUAL 5380 Final Exam Learn Mode</h1>
-      <p class="subtitle">Standalone practice covering every line item in the Final Exam Study Guide, followed by all 35 questions from the printed Final Quizlet guide. Explanations include calculations, examples, verification notes, and references to the textbook and chapter slides.</p>
+      <p class="subtitle">Standalone practice covering the Final Exam Study Guide, the fixed Final Quizlet questions, and an independent Assignment 7 Notes section. Explanations include calculations, examples, verification notes, and references to the course sources.</p>
     </div>
     <div class="top-actions">
       <button class="btn-secondary" id="restartBtn">Restart</button>
       <button class="btn-secondary" id="shuffleBtn">Shuffle</button>
       <button class="btn-starred" id="starredBtn">★ Study Starred</button>
+      <button class="btn-secondary" id="studyGuideToggleBtn" aria-pressed="true">Study Guide: On</button>
       <button class="btn-secondary" id="quizletToggleBtn" aria-pressed="true">Quizlet: On</button>
+      <button class="btn-secondary" id="a7ToggleBtn" aria-pressed="true">A7 Notes: On</button>
     </div>
   </section>
 
@@ -220,12 +227,13 @@
   <div class="legend">
     <span class="legend-chip"><span class="legend-dot guide"></span>Final Exam Study Guide</span>
     <span class="legend-chip"><span class="legend-dot quizlet"></span>Final Quizlet Study Guide</span>
+    <span class="legend-chip"><span class="legend-dot a7"></span>A7 Notes</span>
   </div>
 
   <section class="difficulty-panel" aria-label="Difficulty selection">
     <div class="difficulty-copy">
       <strong>Difficulty mix</strong>
-      <span>Select one or more levels for the Study Guide section. The Quizlet section remains fixed and is not changed by these controls.</span>
+      <span>Select one or more levels for the Study Guide section. The Quizlet and A7 Notes sections remain fixed and are not changed by these controls.</span>
     </div>
     <div class="difficulty-buttons">
       <button class="difficulty-toggle easy" data-difficulty="Easy" aria-pressed="true">Easy</button>
@@ -2880,6 +2888,614 @@ const QUESTIONS = [
     "citation": "Albright & Winston, 8e, Ch. 17, §17-3, pp. 840–843.",
     "exhibit": "",
     "caveat": ""
+  },
+  {
+    "id": "a7-01",
+    "source": "A7 Notes",
+    "sourceRef": "Q1",
+    "question": "What information is assumed to be available when using decision criteria under uncertainty?",
+    "answer": "The decision alternatives, states of nature, and payoff matrix are known, but state probabilities are not",
+    "distractors": [
+      "The probabilities are known, but the payoffs are unknown",
+      "Only the best decision alternative is known",
+      "Both the future state and its payoff are known with certainty"
+    ],
+    "explanation": "Under uncertainty, the decision maker knows the possible choices, future scenarios, and the payoff produced by each decision-state combination. The missing element is a probability distribution for the states, so non-probabilistic rules such as maximin, maximax, and minimax regret are used.",
+    "citation": "Assignment 7 Notes, §1; Albright & Winston, 8e, Ch. 7, §7-2.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-02",
+    "source": "A7 Notes",
+    "sourceRef": "Q2",
+    "question": "In the Assignment 7 payoff matrix, which items are controlled by the decision maker and which are not?",
+    "answer": "The decision alternatives are controlled; Boom, Normal, and Recession are states of nature outside the decision maker’s control",
+    "distractors": [
+      "The economic states are controlled; the decision alternatives are not",
+      "Both the decisions and economic states are controlled",
+      "Neither the decisions nor the states affect the payoff"
+    ],
+    "explanation": "The manager chooses among Aggressive, Moderate, and Conservative. The manager cannot choose whether the economy experiences Boom, Normal, or Recession; those are uncertain states of nature.",
+    "citation": "Assignment 7 Notes, §1; Ch. 7 PowerPoint, §7-2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-03",
+    "source": "A7 Notes",
+    "sourceRef": "Q3",
+    "question": "What is the maximin decision rule?",
+    "answer": "Find each decision’s minimum payoff and choose the decision with the largest of those minimums",
+    "distractors": [
+      "Find each decision’s maximum payoff and choose the largest",
+      "Multiply every payoff by its probability and choose the largest total",
+      "Find the smallest regret in each state and choose the largest"
+    ],
+    "explanation": "Maximin evaluates the worst outcome for every alternative, then protects against the worst case by choosing the best of those minimum payoffs. It is therefore a pessimistic or highly risk-averse criterion.",
+    "citation": "Assignment 7 Notes, §1.1.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-04",
+    "source": "A7 Notes",
+    "sourceRef": "Q4",
+    "question": "Using the payoff matrix, which decision is selected by maximin?",
+    "answer": "d₃: Conservative",
+    "distractors": [
+      "d₁: Aggressive",
+      "d₂: Moderate",
+      "All three decisions are tied"
+    ],
+    "explanation": "The minimum payoff for d₁ is -80, for d₂ it is 10, and for d₃ it is 20. Maximin chooses the largest minimum: max(-80, 10, 20) = 20, so the Conservative decision is selected.",
+    "citation": "Assignment 7 Notes, §1.1.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-05",
+    "source": "A7 Notes",
+    "sourceRef": "Q5",
+    "question": "Why is maximin described as a pessimistic criterion?",
+    "answer": "It assumes the worst state will occur for each decision and protects the best available worst-case payoff",
+    "distractors": [
+      "It assumes the most favorable state will occur",
+      "It ignores all negative payoffs",
+      "It always selects the decision with the highest EMV"
+    ],
+    "explanation": "The rule does not predict that the worst state will actually occur. Instead, it deliberately evaluates each decision by its worst possible consequence, making it suitable for a decision maker who strongly prioritizes downside protection.",
+    "citation": "Assignment 7 Notes, §1.1.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-06",
+    "source": "A7 Notes",
+    "sourceRef": "Q6",
+    "question": "What is the maximax decision rule?",
+    "answer": "Find each decision’s maximum payoff and choose the decision with the largest maximum",
+    "distractors": [
+      "Find each decision’s minimum payoff and choose the largest minimum",
+      "Choose the decision with the smallest maximum regret",
+      "Choose the decision with the smallest expected opportunity loss"
+    ],
+    "explanation": "Maximax focuses entirely on upside potential. It examines the best outcome each decision could produce and then selects the alternative with the single largest best-case payoff.",
+    "citation": "Assignment 7 Notes, §1.3.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-07",
+    "source": "A7 Notes",
+    "sourceRef": "Q7",
+    "question": "Using the payoff matrix, which decision is selected by maximax?",
+    "answer": "d₁: Aggressive",
+    "distractors": [
+      "d₂: Moderate",
+      "d₃: Conservative",
+      "d₂ and d₃ are tied"
+    ],
+    "explanation": "The maximum payoff for d₁ is 120, for d₂ it is 80, and for d₃ it is 40. The largest of these is 120, so maximax selects the Aggressive decision.",
+    "citation": "Assignment 7 Notes, §1.3.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-08",
+    "source": "A7 Notes",
+    "sourceRef": "Q8",
+    "question": "What is the minimax regret decision rule?",
+    "answer": "Compute regrets, find each decision’s maximum regret, and choose the decision with the smallest maximum regret",
+    "distractors": [
+      "Choose the decision with the largest maximum payoff",
+      "Choose the decision with the largest minimum payoff",
+      "Average the payoffs without using probabilities"
+    ],
+    "explanation": "Minimax regret asks how badly each decision could underperform the decision that would have been best after the state became known. It then selects the alternative whose worst possible regret is smallest.",
+    "citation": "Assignment 7 Notes, §1.2.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-09",
+    "source": "A7 Notes",
+    "sourceRef": "Q9",
+    "question": "How is regret calculated for a decision in a particular state?",
+    "answer": "Best payoff available in that state minus the payoff from the decision",
+    "distractors": [
+      "Decision payoff minus the worst payoff in that state",
+      "Decision payoff multiplied by the state probability",
+      "Maximum payoff for the decision minus its minimum payoff"
+    ],
+    "explanation": "Regret measures the opportunity lost by not choosing the best alternative for the state that occurred. Regret is zero when the selected decision already provides the best payoff in that state.",
+    "citation": "Assignment 7 Notes, §1.2.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-10",
+    "source": "A7 Notes",
+    "sourceRef": "Q10",
+    "question": "What is the recession regret for d₁: Aggressive?",
+    "answer": "100",
+    "distractors": [
+      "80",
+      "20",
+      "-100"
+    ],
+    "explanation": "In a recession, the best available payoff is 20 from d₃. The Aggressive payoff is -80. Regret = 20 - (-80) = 100 thousand dollars.",
+    "citation": "Assignment 7 Notes, §1.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-11",
+    "source": "A7 Notes",
+    "sourceRef": "Q11",
+    "question": "Using the regret table, which decision is selected by minimax regret?",
+    "answer": "d₂: Moderate",
+    "distractors": [
+      "d₁: Aggressive",
+      "d₃: Conservative",
+      "d₁ and d₃ are tied"
+    ],
+    "explanation": "The maximum regret is 100 for d₁, 40 for d₂, and 80 for d₃. Minimax regret selects the smallest of these maximum regrets, which is 40 for the Moderate decision.",
+    "citation": "Assignment 7 Notes, §1.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Regret table <span>(in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom regret<br><small>p = 0.30</small></th><th>Normal regret<br><small>p = 0.50</small></th><th>Recession regret<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>0</td><td>0</td><td>100</td></tr>\n<tr><th>d₂: Moderate</th><td>40</td><td>10</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>80</td><td>30</td><td>0</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-12",
+    "source": "A7 Notes",
+    "sourceRef": "Q12",
+    "question": "How does minimax regret differ from maximin?",
+    "answer": "Minimax regret minimizes the worst missed opportunity, while maximin maximizes the worst actual payoff",
+    "distractors": [
+      "Minimax regret uses probabilities, while maximin never uses payoffs",
+      "Maximin chooses the highest upside, while minimax regret chooses the lowest payoff",
+      "The two rules always perform the same calculation"
+    ],
+    "explanation": "Maximin works directly with the original payoff matrix. Minimax regret first converts payoffs into opportunity losses relative to the best decision in each state, then evaluates the worst regret for each alternative.",
+    "citation": "Assignment 7 Notes, §§1.1–1.2.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-13",
+    "source": "A7 Notes",
+    "sourceRef": "Q13",
+    "question": "What changes when a decision problem moves from uncertainty to risk?",
+    "answer": "Probabilities are known or estimated for the states of nature",
+    "distractors": [
+      "The payoff matrix is no longer needed",
+      "The decision maker controls which state occurs",
+      "All outcomes become certain"
+    ],
+    "explanation": "Decision making under risk uses probability estimates for the future states. These probabilities allow probability-weighted criteria such as EMV and EOL.",
+    "citation": "Assignment 7 Notes, §2; Albright & Winston, 8e, Ch. 7, §§7-2–7-3.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-14",
+    "source": "A7 Notes",
+    "sourceRef": "Q14",
+    "question": "What does expected monetary value (EMV) represent?",
+    "answer": "The probability-weighted average monetary payoff for a decision",
+    "distractors": [
+      "The largest possible payoff for a decision",
+      "The decision’s worst possible regret",
+      "The amount paid for perfect information"
+    ],
+    "explanation": "For each decision, multiply every possible payoff by the probability of its state and add the products. EMV is a long-run average criterion; it does not guarantee that the calculated value will actually occur in a single decision.",
+    "citation": "Assignment 7 Notes, §2.1; Ch. 7 PowerPoint, §7-3.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-15",
+    "source": "A7 Notes",
+    "sourceRef": "Q15",
+    "question": "What is EMV for d₁: Aggressive?",
+    "answer": "50",
+    "distractors": [
+      "36",
+      "66",
+      "34"
+    ],
+    "explanation": "EMV(d₁) = 120(0.30) + 60(0.50) + (-80)(0.20) = 36 + 30 - 16 = 50 thousand dollars.",
+    "citation": "Assignment 7 Notes, §2.1.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-16",
+    "source": "A7 Notes",
+    "sourceRef": "Q16",
+    "question": "What is EMV for d₂: Moderate?",
+    "answer": "51",
+    "distractors": [
+      "49",
+      "56",
+      "31"
+    ],
+    "explanation": "EMV(d₂) = 80(0.30) + 50(0.50) + 10(0.20) = 24 + 25 + 2 = 51 thousand dollars.",
+    "citation": "Assignment 7 Notes, §2.1.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-17",
+    "source": "A7 Notes",
+    "sourceRef": "Q17",
+    "question": "What is EMV for d₃: Conservative?",
+    "answer": "31",
+    "distractors": [
+      "27",
+      "35",
+      "40"
+    ],
+    "explanation": "EMV(d₃) = 40(0.30) + 30(0.50) + 20(0.20) = 12 + 15 + 4 = 31 thousand dollars.",
+    "citation": "Assignment 7 Notes, §2.1.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-18",
+    "source": "A7 Notes",
+    "sourceRef": "Q18",
+    "question": "Which decision is selected by the EMV criterion?",
+    "answer": "d₂: Moderate, because its EMV of 51 is the largest",
+    "distractors": [
+      "d₁: Aggressive, because it has the largest possible payoff",
+      "d₃: Conservative, because it has no negative payoff",
+      "d₁ and d₂ are tied because their EMVs differ by only 1"
+    ],
+    "explanation": "The calculated EMVs are 50 for d₁, 51 for d₂, and 31 for d₃. EMV selects the largest probability-weighted payoff, so d₂ is preferred.",
+    "citation": "Assignment 7 Notes, §2.1.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-19",
+    "source": "A7 Notes",
+    "sourceRef": "Q19",
+    "question": "What is expected opportunity loss (EOL)?",
+    "answer": "The probability-weighted average regret for a decision",
+    "distractors": [
+      "The probability-weighted average payoff",
+      "The largest regret in the entire table",
+      "The difference between utility and payoff"
+    ],
+    "explanation": "EOL applies state probabilities to the regret table. For each decision, multiply each state’s regret by that state’s probability and sum the products. The preferred decision has the smallest EOL.",
+    "citation": "Assignment 7 Notes, §2.2.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-20",
+    "source": "A7 Notes",
+    "sourceRef": "Q20",
+    "question": "What is EOL for d₁: Aggressive?",
+    "answer": "20",
+    "distractors": [
+      "10",
+      "40",
+      "100"
+    ],
+    "explanation": "EOL(d₁) = 0(0.30) + 0(0.50) + 100(0.20) = 20 thousand dollars. All expected regret comes from the recession state.",
+    "citation": "Assignment 7 Notes, §2.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Regret table <span>(in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom regret<br><small>p = 0.30</small></th><th>Normal regret<br><small>p = 0.50</small></th><th>Recession regret<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>0</td><td>0</td><td>100</td></tr>\n<tr><th>d₂: Moderate</th><td>40</td><td>10</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>80</td><td>30</td><td>0</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-21",
+    "source": "A7 Notes",
+    "sourceRef": "Q21",
+    "question": "What is EOL for d₂: Moderate?",
+    "answer": "19",
+    "distractors": [
+      "12",
+      "20",
+      "39"
+    ],
+    "explanation": "EOL(d₂) = 40(0.30) + 10(0.50) + 10(0.20) = 12 + 5 + 2 = 19 thousand dollars.",
+    "citation": "Assignment 7 Notes, §2.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Regret table <span>(in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom regret<br><small>p = 0.30</small></th><th>Normal regret<br><small>p = 0.50</small></th><th>Recession regret<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>0</td><td>0</td><td>100</td></tr>\n<tr><th>d₂: Moderate</th><td>40</td><td>10</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>80</td><td>30</td><td>0</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-22",
+    "source": "A7 Notes",
+    "sourceRef": "Q22",
+    "question": "What is EOL for d₃: Conservative?",
+    "answer": "39",
+    "distractors": [
+      "24",
+      "30",
+      "19"
+    ],
+    "explanation": "EOL(d₃) = 80(0.30) + 30(0.50) + 0(0.20) = 24 + 15 + 0 = 39 thousand dollars.",
+    "citation": "Assignment 7 Notes, §2.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Regret table <span>(in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom regret<br><small>p = 0.30</small></th><th>Normal regret<br><small>p = 0.50</small></th><th>Recession regret<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>0</td><td>0</td><td>100</td></tr>\n<tr><th>d₂: Moderate</th><td>40</td><td>10</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>80</td><td>30</td><td>0</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-23",
+    "source": "A7 Notes",
+    "sourceRef": "Q23",
+    "question": "Which decision is selected by the EOL criterion?",
+    "answer": "d₂: Moderate, because its EOL of 19 is the smallest",
+    "distractors": [
+      "d₁: Aggressive, because its EOL is 20",
+      "d₃: Conservative, because its recession regret is zero",
+      "d₁ and d₂ are tied"
+    ],
+    "explanation": "The EOL values are 20, 19, and 39. Because opportunity loss is undesirable, the rule selects the smallest value: 19 for d₂.",
+    "citation": "Assignment 7 Notes, §2.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Regret table <span>(in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom regret<br><small>p = 0.30</small></th><th>Normal regret<br><small>p = 0.50</small></th><th>Recession regret<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>0</td><td>0</td><td>100</td></tr>\n<tr><th>d₂: Moderate</th><td>40</td><td>10</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>80</td><td>30</td><td>0</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-24",
+    "source": "A7 Notes",
+    "sourceRef": "Q24",
+    "question": "What relationship should hold between the EMV and EOL decision rules?",
+    "answer": "The decision that maximizes EMV is the same decision that minimizes EOL",
+    "distractors": [
+      "The decision that maximizes EMV must also maximize EOL",
+      "EMV and EOL always select opposite decisions",
+      "The two rules are unrelated"
+    ],
+    "explanation": "EMV measures expected payoff, while EOL measures expected payoff forgone. Both rank the alternatives consistently, so the highest-EMV decision is also the lowest-EOL decision.",
+    "citation": "Assignment 7 Notes, §2.2.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-25",
+    "source": "A7 Notes",
+    "sourceRef": "Q25",
+    "question": "What is a conditional probability?",
+    "answer": "The probability of an event given that another event has occurred",
+    "distractors": [
+      "The probability of two events without using any new information",
+      "A payoff multiplied by a utility value",
+      "The maximum regret for a decision"
+    ],
+    "explanation": "Conditional probabilities update beliefs after new information is observed. In decision analysis, a consultant, expert opinion, or test market can change the probabilities assigned to the states of nature.",
+    "citation": "Assignment 7 Notes, §3.1; Albright & Winston, 8e, Ch. 7, §7-6a.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-26",
+    "source": "A7 Notes",
+    "sourceRef": "Q26",
+    "question": "How is expected value with perfect information (EVwPI) calculated?",
+    "answer": "For each state, choose its best payoff, multiply by the state probability, and sum",
+    "distractors": [
+      "Choose the single largest payoff in the entire table",
+      "Average the three EMVs",
+      "Subtract every regret from the smallest payoff"
+    ],
+    "explanation": "Perfect information means the state is known before the decision is chosen. Therefore, the decision maker can use the best decision separately in each state, then compute the probability-weighted value of those best payoffs.",
+    "citation": "Assignment 7 Notes, §3.2; Albright & Winston, 8e, Ch. 7, §7-6b.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-27",
+    "source": "A7 Notes",
+    "sourceRef": "Q27",
+    "question": "What is EVwPI for the Assignment 7 example?",
+    "answer": "70",
+    "distractors": [
+      "51",
+      "19",
+      "60"
+    ],
+    "explanation": "The best payoff is 120 in Boom, 60 in Normal, and 20 in Recession. EVwPI = 120(0.30) + 60(0.50) + 20(0.20) = 36 + 30 + 4 = 70 thousand dollars.",
+    "citation": "Assignment 7 Notes, §3.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-28",
+    "source": "A7 Notes",
+    "sourceRef": "Q28",
+    "question": "What is the expected value of perfect information (EVPI)?",
+    "answer": "19",
+    "distractors": [
+      "70",
+      "51",
+      "121"
+    ],
+    "explanation": "EVPI = EVwPI - best EMV without information = 70 - 51 = 19 thousand dollars. This is the maximum amount worth paying for information that predicts the state perfectly.",
+    "citation": "Assignment 7 Notes, §3.3.",
+    "exhibit": "\n<div class=\"exhibit-title\">Assignment 7 running example <span>(payoffs in $ thousands)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Boom<br><small>p = 0.30</small></th><th>Normal<br><small>p = 0.50</small></th><th>Recession<br><small>p = 0.20</small></th></tr></thead>\n<tbody>\n<tr><th>d₁: Aggressive</th><td>120</td><td>60</td><td>-80</td></tr>\n<tr><th>d₂: Moderate</th><td>80</td><td>50</td><td>10</td></tr>\n<tr><th>d₃: Conservative</th><td>40</td><td>30</td><td>20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-29",
+    "source": "A7 Notes",
+    "sourceRef": "Q29",
+    "question": "A consultant offers perfect information for $25,000. What should the company do?",
+    "answer": "Reject it because the $25,000 cost exceeds the $19,000 EVPI",
+    "distractors": [
+      "Buy it because $25,000 is less than EVwPI of $70,000",
+      "Buy it because the best EMV is only $51,000",
+      "Be indifferent because consultant cost is not compared with EVPI"
+    ],
+    "explanation": "Perfect information adds an expected benefit of only $19,000. Paying $25,000 would reduce expected value by $6,000 compared with making the decision without the consultant.",
+    "citation": "Assignment 7 Notes, §§3.3–3.4.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-30",
+    "source": "A7 Notes",
+    "sourceRef": "Q30",
+    "question": "A consultant offers perfect information for $10,000. What is the expected net gain from buying it?",
+    "answer": "$9,000",
+    "distractors": [
+      "$10,000",
+      "$19,000",
+      "$60,000"
+    ],
+    "explanation": "Expected net gain = EVPI - information cost = $19,000 - $10,000 = $9,000. Because the net gain is positive, the information is worthwhile on an expected-value basis.",
+    "citation": "Assignment 7 Notes, §3.4.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-31",
+    "source": "A7 Notes",
+    "sourceRef": "Q31",
+    "question": "Why might expected utility be used instead of EMV?",
+    "answer": "EMV assumes risk neutrality, while utility can represent risk-averse or risk-seeking preferences",
+    "distractors": [
+      "EMV cannot use monetary payoffs",
+      "Utility eliminates all uncertainty",
+      "Expected utility does not require probabilities"
+    ],
+    "explanation": "EMV treats every dollar of payoff as having the same marginal value. A utility function transforms money into preference values so the model can reflect how the decision maker actually feels about risk.",
+    "citation": "Assignment 7 Notes, §4; Albright & Winston, 8e, Ch. 7, §7-7.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "a7-32",
+    "source": "A7 Notes",
+    "sourceRef": "Q32",
+    "question": "For a risk-averse decision maker, how does utility normally change as money increases?",
+    "answer": "Utility increases, but at a decreasing rate",
+    "distractors": [
+      "Utility decreases at a constant rate",
+      "Utility increases at an increasing rate",
+      "Utility remains unchanged"
+    ],
+    "explanation": "Risk aversion is represented by diminishing marginal utility. Additional money still adds utility, but each additional dollar contributes less utility than the previous dollar.",
+    "citation": "Assignment 7 Notes, §4.1; Ch. 7 PowerPoint, §7-7.",
+    "exhibit": "\n<div class=\"exhibit-title\">Utility model from the Assignment 7 notes</div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Utility function</th><td>U(x) = 1 − e<sup>−x/50</sup></td></tr>\n<tr><th>State probabilities</th><td>Boom 0.30 · Normal 0.50 · Recession 0.20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-33",
+    "source": "A7 Notes",
+    "sourceRef": "Q33",
+    "question": "Using U(x) = 1 − e^(−x/50), what is U(120) approximately?",
+    "answer": "0.9093",
+    "distractors": [
+      "0.6988",
+      "0.7981",
+      "-3.953"
+    ],
+    "explanation": "U(120) = 1 - e^(-120/50) = 1 - e^(-2.4). Since e^(-2.4) is about 0.0907, utility is 1 - 0.0907 = 0.9093.",
+    "citation": "Assignment 7 Notes, §4.1.",
+    "exhibit": "\n<div class=\"exhibit-title\">Utility model from the Assignment 7 notes</div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Utility function</th><td>U(x) = 1 − e<sup>−x/50</sup></td></tr>\n<tr><th>State probabilities</th><td>Boom 0.30 · Normal 0.50 · Recession 0.20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-34",
+    "source": "A7 Notes",
+    "sourceRef": "Q34",
+    "question": "Using U(x) = 1 − e^(−x/50), what is U(-80) approximately?",
+    "answer": "-3.953",
+    "distractors": [
+      "0.9093",
+      "-0.7981",
+      "4.953"
+    ],
+    "explanation": "U(-80) = 1 - e^(-(-80)/50) = 1 - e^(1.6). Because e^(1.6) is about 4.953, utility is 1 - 4.953 = -3.953. The large negative utility reflects how severely a risk-averse decision maker views this loss.",
+    "citation": "Assignment 7 Notes, §4.1.",
+    "exhibit": "\n<div class=\"exhibit-title\">Utility model from the Assignment 7 notes</div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Utility function</th><td>U(x) = 1 − e<sup>−x/50</sup></td></tr>\n<tr><th>State probabilities</th><td>Boom 0.30 · Normal 0.50 · Recession 0.20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-35",
+    "source": "A7 Notes",
+    "sourceRef": "Q35",
+    "question": "What is the expected utility of d₁: Aggressive?",
+    "answer": "-0.1684",
+    "distractors": [
+      "0.1684",
+      "0.5918",
+      "0.4567"
+    ],
+    "explanation": "EU(d₁) = 0.30(0.9093) + 0.50(0.6988) + 0.20(-3.953) = 0.2728 + 0.3494 - 0.7906 = -0.1684. The recession loss overwhelms the utility from the favorable states.",
+    "citation": "Assignment 7 Notes, §4.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Utility model from the Assignment 7 notes</div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Utility function</th><td>U(x) = 1 − e<sup>−x/50</sup></td></tr>\n<tr><th>State probabilities</th><td>Boom 0.30 · Normal 0.50 · Recession 0.20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-36",
+    "source": "A7 Notes",
+    "sourceRef": "Q36",
+    "question": "What is the expected utility of d₂: Moderate?",
+    "answer": "0.5918",
+    "distractors": [
+      "0.4567",
+      "0.7981",
+      "-0.1684"
+    ],
+    "explanation": "EU(d₂) = 0.30(0.7981) + 0.50(0.6321) + 0.20(0.1813) = 0.2394 + 0.3161 + 0.0363 = 0.5918.",
+    "citation": "Assignment 7 Notes, §4.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Utility model from the Assignment 7 notes</div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Utility function</th><td>U(x) = 1 − e<sup>−x/50</sup></td></tr>\n<tr><th>State probabilities</th><td>Boom 0.30 · Normal 0.50 · Recession 0.20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-37",
+    "source": "A7 Notes",
+    "sourceRef": "Q37",
+    "question": "What is the expected utility of d₃: Conservative?",
+    "answer": "0.4567",
+    "distractors": [
+      "0.5918",
+      "0.3297",
+      "0.1684"
+    ],
+    "explanation": "EU(d₃) = 0.30(0.5507) + 0.50(0.4512) + 0.20(0.3297) = 0.1652 + 0.2256 + 0.0659 = 0.4567.",
+    "citation": "Assignment 7 Notes, §4.2.",
+    "exhibit": "\n<div class=\"exhibit-title\">Utility model from the Assignment 7 notes</div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Utility function</th><td>U(x) = 1 − e<sup>−x/50</sup></td></tr>\n<tr><th>State probabilities</th><td>Boom 0.30 · Normal 0.50 · Recession 0.20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "a7-38",
+    "source": "A7 Notes",
+    "sourceRef": "Q38",
+    "question": "Which decision is selected by expected utility, and why?",
+    "answer": "d₂: Moderate, because its expected utility of 0.5918 is the highest",
+    "distractors": [
+      "d₁: Aggressive, because it has the highest possible payoff",
+      "d₃: Conservative, because it has the smallest payoff range",
+      "d₁ and d₂ are tied because both are selected by EMV"
+    ],
+    "explanation": "The expected utilities are -0.1684 for d₁, 0.5918 for d₂, and 0.4567 for d₃. Expected utility selects d₂. The result matches EMV and EOL here, but the reason is different: expected utility explicitly incorporates risk preferences.",
+    "citation": "Assignment 7 Notes, §§4.2–4.3.",
+    "exhibit": "\n<div class=\"exhibit-title\">Utility model from the Assignment 7 notes</div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Utility function</th><td>U(x) = 1 − e<sup>−x/50</sup></td></tr>\n<tr><th>State probabilities</th><td>Boom 0.30 · Normal 0.50 · Recession 0.20</td></tr>\n</tbody></table>\n",
+    "caveat": ""
   }
 ];
 const DIFFICULTY_ORDER = ['Easy', 'Standard', 'Hard'];
@@ -2893,7 +3509,9 @@ let currentMode = 'full';
 let lastMissed = [];
 let favorites = new Set();
 let selectedDifficulties = new Set(DIFFICULTY_ORDER);
+let studyGuideEnabled = true;
 let quizletEnabled = true;
+let a7Enabled = true;
 
 try {
   const saved = JSON.parse(localStorage.getItem('bual5380FinalFavorites') || '[]');
@@ -2907,8 +3525,18 @@ try {
 } catch (e) {}
 
 try {
+  const savedStudyGuideState = localStorage.getItem('bual5380FinalStudyGuideEnabled');
+  if (savedStudyGuideState === 'false') studyGuideEnabled = false;
+} catch (e) {}
+
+try {
   const savedQuizletState = localStorage.getItem('bual5380FinalQuizletEnabled');
   if (savedQuizletState === 'false') quizletEnabled = false;
+} catch (e) {}
+
+try {
+  const savedA7State = localStorage.getItem('bual5380FinalA7Enabled');
+  if (savedA7State === 'false') a7Enabled = false;
 } catch (e) {}
 
 const els = {
@@ -2943,7 +3571,9 @@ const els = {
   restartBtn: document.getElementById('restartBtn'),
   shuffleBtn: document.getElementById('shuffleBtn'),
   starredBtn: document.getElementById('starredBtn'),
-  quizletToggleBtn: document.getElementById('quizletToggleBtn')
+  studyGuideToggleBtn: document.getElementById('studyGuideToggleBtn'),
+  quizletToggleBtn: document.getElementById('quizletToggleBtn'),
+  a7ToggleBtn: document.getElementById('a7ToggleBtn')
 };
 
 function shuffle(arr) {
@@ -2961,10 +3591,11 @@ function numericRef(item) {
 }
 
 function stableQuestionOrder(indices) {
+  const sourceRank = { 'Study Guide': 0, 'Quizlet': 1, 'A7 Notes': 2 };
   return [...indices].sort((a, b) => {
     const qa = QUESTIONS[a];
     const qb = QUESTIONS[b];
-    const sourceDifference = (qa.source === 'Study Guide' ? 0 : 1) - (qb.source === 'Study Guide' ? 0 : 1);
+    const sourceDifference = (sourceRank[qa.source] ?? 99) - (sourceRank[qb.source] ?? 99);
     if (sourceDifference) return sourceDifference;
     const refDifference = numericRef(qa) - numericRef(qb);
     if (refDifference) return refDifference;
@@ -2979,8 +3610,10 @@ function stableQuestionOrder(indices) {
 function buildDefaultOrder() {
   const indices = QUESTIONS.map((_, i) => i).filter(i => {
     const q = QUESTIONS[i];
+    if (q.source === 'Study Guide') return studyGuideEnabled && selectedDifficulties.has(q.difficulty);
     if (q.source === 'Quizlet') return quizletEnabled;
-    return selectedDifficulties.has(q.difficulty);
+    if (q.source === 'A7 Notes') return a7Enabled;
+    return false;
   });
   return stableQuestionOrder(indices);
 }
@@ -3005,6 +3638,26 @@ function renderDifficultyControls() {
   });
 }
 
+function persistStudyGuideToggle() {
+  try {
+    localStorage.setItem('bual5380FinalStudyGuideEnabled', studyGuideEnabled ? 'true' : 'false');
+  } catch (e) {}
+}
+
+function renderStudyGuideToggle() {
+  els.studyGuideToggleBtn.textContent = studyGuideEnabled ? 'Study Guide: On' : 'Study Guide: Off';
+  els.studyGuideToggleBtn.setAttribute('aria-pressed', studyGuideEnabled ? 'true' : 'false');
+  els.studyGuideToggleBtn.classList.toggle('btn-toggle-off', !studyGuideEnabled);
+}
+
+function toggleStudyGuideSection() {
+  studyGuideEnabled = !studyGuideEnabled;
+  persistStudyGuideToggle();
+  renderStudyGuideToggle();
+  lastMissed = [];
+  start(null, 'full', false);
+}
+
 function persistQuizletToggle() {
   try {
     localStorage.setItem('bual5380FinalQuizletEnabled', quizletEnabled ? 'true' : 'false');
@@ -3021,6 +3674,26 @@ function toggleQuizletSection() {
   quizletEnabled = !quizletEnabled;
   persistQuizletToggle();
   renderQuizletToggle();
+  lastMissed = [];
+  start(null, 'full', false);
+}
+
+function persistA7Toggle() {
+  try {
+    localStorage.setItem('bual5380FinalA7Enabled', a7Enabled ? 'true' : 'false');
+  } catch (e) {}
+}
+
+function renderA7Toggle() {
+  els.a7ToggleBtn.textContent = a7Enabled ? 'A7 Notes: On' : 'A7 Notes: Off';
+  els.a7ToggleBtn.setAttribute('aria-pressed', a7Enabled ? 'true' : 'false');
+  els.a7ToggleBtn.classList.toggle('btn-toggle-off', !a7Enabled);
+}
+
+function toggleA7Section() {
+  a7Enabled = !a7Enabled;
+  persistA7Toggle();
+  renderA7Toggle();
   lastMissed = [];
   start(null, 'full', false);
 }
@@ -3042,7 +3715,9 @@ function favoriteIndices() {
   const indices = QUESTIONS
     .map((q, i) => {
       if (!favorites.has(q.id)) return -1;
+      if (q.source === 'Study Guide' && !studyGuideEnabled) return -1;
       if (q.source === 'Quizlet' && !quizletEnabled) return -1;
+      if (q.source === 'A7 Notes' && !a7Enabled) return -1;
       return i;
     })
     .filter(i => i >= 0);
@@ -3051,7 +3726,7 @@ function favoriteIndices() {
 
 function effectiveDifficulty(qIndex) {
   const item = QUESTIONS[qIndex];
-  return item.source === 'Quizlet' ? 'Fixed' : item.difficulty;
+  return item.source === 'Study Guide' ? item.difficulty : 'Fixed';
 }
 
 function start(source = null, mode = 'full', shouldShuffle = false) {
@@ -3087,11 +3762,13 @@ function difficultySummary() {
 
 function modeLabel() {
   const mix = difficultySummary();
+  const studyGuideState = studyGuideEnabled ? `Study Guide: ${mix}` : 'Study Guide off';
   const quizletState = quizletEnabled ? 'Quizlet on' : 'Quizlet off';
-  if (currentMode === 'shuffled') return `Shuffled · Study Guide: ${mix} · ${quizletState}`;
-  if (currentMode === 'starred') return `Starred practice · Study Guide: ${mix} · ${quizletState}`;
-  if (currentMode === 'missed') return `Missed practice · Study Guide: ${mix} · ${quizletState}`;
-  return `Fixed order · Study Guide: ${mix} · ${quizletState}`;
+  const a7State = a7Enabled ? 'A7 on' : 'A7 off';
+  if (currentMode === 'shuffled') return `Shuffled · ${studyGuideState} · ${quizletState} · ${a7State}`;
+  if (currentMode === 'starred') return `Starred practice · ${studyGuideState} · ${quizletState} · ${a7State}`;
+  if (currentMode === 'missed') return `Missed practice · ${studyGuideState} · ${quizletState} · ${a7State}`;
+  return `Fixed order · ${studyGuideState} · ${quizletState} · ${a7State}`;
 }
 
 function updateStats() {
@@ -3128,13 +3805,17 @@ function render() {
     currentChoices = saved.choices;
   }
 
+  const isStudyGuide = item.source === 'Study Guide';
   const isQuizlet = item.source === 'Quizlet';
+  const isA7 = item.source === 'A7 Notes';
   els.quizCard.classList.toggle('source-quizlet', isQuizlet);
-  els.sourceBadge.className = 'source-badge ' + (isQuizlet ? 'quizlet' : 'guide');
+  els.quizCard.classList.toggle('source-a7', isA7);
+  const sourceClass = isQuizlet ? 'quizlet' : (isA7 ? 'a7' : 'guide');
+  els.sourceBadge.className = 'source-badge ' + sourceClass;
   els.sourceBadge.textContent = `${item.source} · ${item.sourceRef}`;
 
   const shownDifficulty = states[qIndex].difficulty;
-  if (isQuizlet) {
+  if (!isStudyGuide) {
     els.difficultyBadge.style.display = 'none';
   } else {
     els.difficultyBadge.style.display = 'inline-flex';
@@ -3256,7 +3937,9 @@ els.fullRestartBtn.addEventListener('click', () => { lastMissed = []; start(null
 els.practiceMissedBtn.addEventListener('click', () => { if (lastMissed.length) start(lastMissed, 'missed', false); });
 els.practiceStarredBtn.addEventListener('click', () => start(favoriteIndices(), 'starred', false));
 els.difficultyButtons.forEach(btn => btn.addEventListener('click', () => toggleDifficulty(btn.dataset.difficulty)));
+els.studyGuideToggleBtn.addEventListener('click', toggleStudyGuideSection);
 els.quizletToggleBtn.addEventListener('click', toggleQuizletSection);
+els.a7ToggleBtn.addEventListener('click', toggleA7Section);
 
 document.addEventListener('keydown', e => {
   if (els.quizCard.style.display === 'none') return;
@@ -3265,7 +3948,9 @@ document.addEventListener('keydown', e => {
 });
 
 renderDifficultyControls();
+renderStudyGuideToggle();
 renderQuizletToggle();
+renderA7Toggle();
 start(null, 'full', false);
 </script>
 
