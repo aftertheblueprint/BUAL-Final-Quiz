@@ -23,6 +23,8 @@
     --quizlet-soft: #ede9fe;
     --a7: #b45309;
     --a7-soft: #fef3c7;
+    --exam-feedback: #c2410c;
+    --exam-feedback-soft: #ffedd5;
     --star: #d97706;
     --shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
   }
@@ -110,9 +112,11 @@
   .legend-dot.guide { background: var(--guide); }
   .legend-dot.quizlet { background: var(--quizlet); }
   .legend-dot.a7 { background: var(--a7); }
+  .legend-dot.exam-feedback { background: var(--exam-feedback); }
   .card { background: var(--card); border: 1px solid var(--border); border-top: 5px solid var(--guide); border-radius: 24px; padding: 24px; box-shadow: var(--shadow); transition: border-color .2s ease; }
   .card.source-quizlet { border-top-color: var(--quizlet); }
   .card.source-a7 { border-top-color: var(--a7); }
+  .card.source-exam-feedback { border-top-color: var(--exam-feedback); }
   #quizCard {
     height: 760px;
     display: flex;
@@ -132,6 +136,7 @@
   .source-badge.guide { color: #115e59; background: var(--guide-soft); }
   .source-badge.quizlet { color: #5b21b6; background: var(--quizlet-soft); }
   .source-badge.a7 { color: #92400e; background: var(--a7-soft); }
+  .source-badge.exam-feedback { color: #9a3412; background: var(--exam-feedback-soft); }
   .favorite-btn { width: 44px; height: 42px; padding: 0; display: grid; place-items: center; font-size: 1.55rem; background: white; color: #94a3b8; border: 1px solid var(--border); }
   .favorite-btn.active { color: var(--star); background: #fffbeb; border-color: #f59e0b; }
   .progress-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--muted); font-weight: 700; margin-bottom: 14px; }
@@ -204,7 +209,7 @@
   <section class="hero">
     <div>
       <h1>BUAL 5380 Final Exam Learn Mode</h1>
-      <p class="subtitle">Standalone practice covering the Final Exam Study Guide, the fixed Final Quizlet questions, and an independent Assignment 7 Notes section. Explanations include calculations, examples, verification notes, and references to the course sources.</p>
+      <p class="subtitle">Standalone practice covering the Final Exam Study Guide, fixed Final Quizlet questions, Assignment 7 Notes, and a focused Exam Feedback section. Explanations include calculations, examples, verification notes, and references to the course sources.</p>
     </div>
     <div class="top-actions">
       <button class="btn-secondary" id="restartBtn">Restart</button>
@@ -213,6 +218,7 @@
       <button class="btn-secondary" id="studyGuideToggleBtn" aria-pressed="true">Study Guide: On</button>
       <button class="btn-secondary" id="quizletToggleBtn" aria-pressed="true">Quizlet: On</button>
       <button class="btn-secondary" id="a7ToggleBtn" aria-pressed="true">A7 Notes: On</button>
+      <button class="btn-secondary" id="examFeedbackToggleBtn" aria-pressed="true">Exam Feedback: On</button>
     </div>
   </section>
 
@@ -228,12 +234,13 @@
     <span class="legend-chip"><span class="legend-dot guide"></span>Final Exam Study Guide</span>
     <span class="legend-chip"><span class="legend-dot quizlet"></span>Final Quizlet Study Guide</span>
     <span class="legend-chip"><span class="legend-dot a7"></span>A7 Notes</span>
+    <span class="legend-chip"><span class="legend-dot exam-feedback"></span>Exam Feedback</span>
   </div>
 
   <section class="difficulty-panel" aria-label="Difficulty selection">
     <div class="difficulty-copy">
       <strong>Difficulty mix</strong>
-      <span>Select one or more levels for the Study Guide section. The Quizlet and A7 Notes sections remain fixed and are not changed by these controls.</span>
+      <span>Select one or more levels for the Study Guide section. The Quizlet, A7 Notes, and Exam Feedback sections remain fixed and are not changed by these controls.</span>
     </div>
     <div class="difficulty-buttons">
       <button class="difficulty-toggle easy" data-difficulty="Easy" aria-pressed="true">Easy</button>
@@ -3496,6 +3503,454 @@ const QUESTIONS = [
     "citation": "Assignment 7 Notes, §§4.2–4.3.",
     "exhibit": "\n<div class=\"exhibit-title\">Utility model from the Assignment 7 notes</div>\n<table class=\"exhibit-table compact\">\n<tbody>\n<tr><th>Utility function</th><td>U(x) = 1 − e<sup>−x/50</sup></td></tr>\n<tr><th>State probabilities</th><td>Boom 0.30 · Normal 0.50 · Recession 0.20</td></tr>\n</tbody></table>\n",
     "caveat": ""
+  },
+  {
+    "id": "feedback-01",
+    "source": "Exam Feedback",
+    "sourceRef": "Q1",
+    "question": "What is the usual objective of a basic transportation model?",
+    "answer": "Minimize total shipping cost while satisfying origin-capacity and destination-demand requirements",
+    "distractors": [
+      "Maximize the number of shipping routes used",
+      "Minimize destination demand",
+      "Maximize unused origin capacity"
+    ],
+    "explanation": "A transportation model chooses shipment quantities on allowable routes. Total cost is the sum of unit shipping cost multiplied by units shipped on each route, and the solution must respect the supply or capacity at each origin and the demand at each destination.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-02",
+    "source": "Exam Feedback",
+    "sourceRef": "Q2",
+    "question": "In a transportation model, what does the decision variable xᵢⱼ usually represent?",
+    "answer": "The number of units shipped from origin i to destination j",
+    "distractors": [
+      "The unit shipping cost from origin i to destination j",
+      "The total capacity of origin i",
+      "The demand at destination j"
+    ],
+    "explanation": "The route costs, origin capacities, and destination demands are inputs. The controllable quantities are the flows on the routes, so xᵢⱼ represents how much is shipped from a specific origin to a specific destination.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-03",
+    "source": "Exam Feedback",
+    "sourceRef": "Q3",
+    "question": "Which three sets of numerical inputs are central to a transportation model?",
+    "answer": "Origin capacities, destination demands, and unit shipping costs",
+    "distractors": [
+      "Regression coefficients, residuals, and p-values",
+      "Decision probabilities, utilities, and regrets",
+      "Only route names, warehouse names, and product names"
+    ],
+    "explanation": "Capacities limit what can leave the origins, demands specify what must arrive at the destinations, and route-specific unit costs create the objective function. Shipment quantities are outputs selected by Solver rather than fixed inputs.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Transportation data</div>\n<table class=\"exhibit-table\">\n<thead>\n<tr><th>Origin</th><th>Capacity</th><th>Warehouse 1<br><small>Demand 300</small></th><th>Warehouse 2<br><small>Demand 350</small></th><th>Warehouse 3<br><small>Demand 250</small></th></tr>\n</thead>\n<tbody>\n<tr><th>Plant A</th><td>500</td><td>$4/unit</td><td>$6/unit</td><td>$8/unit</td></tr>\n<tr><th>Plant B</th><td>400</td><td>$5/unit</td><td>$3/unit</td><td>$7/unit</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-04",
+    "source": "Exam Feedback",
+    "sourceRef": "Q4",
+    "question": "Using the transportation data, which constraint represents Plant A's capacity?",
+    "answer": "xA1 + xA2 + xA3 ≤ 500",
+    "distractors": [
+      "xA1 + xA2 + xA3 ≥ 500",
+      "xA1 + xB1 = 500",
+      "4xA1 + 6xA2 + 8xA3 ≤ 500"
+    ],
+    "explanation": "Plant A can ship no more than 500 units in total. Add all shipments leaving Plant A and restrict that sum to be less than or equal to its capacity. The shipping costs belong in the objective, not in the capacity constraint.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Transportation data</div>\n<table class=\"exhibit-table\">\n<thead>\n<tr><th>Origin</th><th>Capacity</th><th>Warehouse 1<br><small>Demand 300</small></th><th>Warehouse 2<br><small>Demand 350</small></th><th>Warehouse 3<br><small>Demand 250</small></th></tr>\n</thead>\n<tbody>\n<tr><th>Plant A</th><td>500</td><td>$4/unit</td><td>$6/unit</td><td>$8/unit</td></tr>\n<tr><th>Plant B</th><td>400</td><td>$5/unit</td><td>$3/unit</td><td>$7/unit</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-05",
+    "source": "Exam Feedback",
+    "sourceRef": "Q5",
+    "question": "Using the transportation data, which constraint ensures that Warehouse 2 receives its required demand?",
+    "answer": "xA2 + xB2 = 350",
+    "distractors": [
+      "xA2 + xB2 ≤ 350",
+      "xA1 + xA2 + xA3 = 350",
+      "6xA2 + 3xB2 = 350"
+    ],
+    "explanation": "Warehouse 2 must receive 350 units. Its inbound shipments are xA2 from Plant A and xB2 from Plant B, so their sum must equal 350 in the standard demand-equality formulation.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Transportation data</div>\n<table class=\"exhibit-table\">\n<thead>\n<tr><th>Origin</th><th>Capacity</th><th>Warehouse 1<br><small>Demand 300</small></th><th>Warehouse 2<br><small>Demand 350</small></th><th>Warehouse 3<br><small>Demand 250</small></th></tr>\n</thead>\n<tbody>\n<tr><th>Plant A</th><td>500</td><td>$4/unit</td><td>$6/unit</td><td>$8/unit</td></tr>\n<tr><th>Plant B</th><td>400</td><td>$5/unit</td><td>$3/unit</td><td>$7/unit</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-06",
+    "source": "Exam Feedback",
+    "sourceRef": "Q6",
+    "question": "Why is the displayed transportation problem called balanced?",
+    "answer": "Total capacity equals total demand: 500 + 400 = 300 + 350 + 250 = 900",
+    "distractors": [
+      "Every route has the same unit shipping cost",
+      "Each plant serves the same number of warehouses",
+      "Every shipment quantity must be identical"
+    ],
+    "explanation": "A balanced transportation table has total available supply equal to total required demand. Here, total capacity is 900 units and total demand is also 900 units, so all available capacity is used when every demand is met.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Transportation data</div>\n<table class=\"exhibit-table\">\n<thead>\n<tr><th>Origin</th><th>Capacity</th><th>Warehouse 1<br><small>Demand 300</small></th><th>Warehouse 2<br><small>Demand 350</small></th><th>Warehouse 3<br><small>Demand 250</small></th></tr>\n</thead>\n<tbody>\n<tr><th>Plant A</th><td>500</td><td>$4/unit</td><td>$6/unit</td><td>$8/unit</td></tr>\n<tr><th>Plant B</th><td>400</td><td>$5/unit</td><td>$3/unit</td><td>$7/unit</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-07",
+    "source": "Exam Feedback",
+    "sourceRef": "Q7",
+    "question": "Suppose total origin supply is 950 units and total destination demand is 900 units in an equality-form transportation table. How can the table be balanced?",
+    "answer": "Add a dummy destination with demand of 50 units and an appropriate zero or disposal cost",
+    "distractors": [
+      "Add a dummy origin with supply of 50 units",
+      "Increase every destination demand by 50 units",
+      "Delete one of the real destinations"
+    ],
+    "explanation": "Supply exceeds demand by 950 - 900 = 50 units. A dummy destination absorbs the 50-unit excess. Its route costs usually represent the cost of unused capacity, storage, or disposal; they are often zero when unused capacity has no direct cost.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-08",
+    "source": "Exam Feedback",
+    "sourceRef": "Q8",
+    "question": "What is the total shipping cost of the proposed shipment plan?",
+    "answer": "$4,600",
+    "distractors": [
+      "$4,300",
+      "$3,900",
+      "$5,200"
+    ],
+    "explanation": "Calculate route cost times flow and add the results: 300($4) + 200($6) + 150($3) + 250($7) = $1,200 + $1,200 + $450 + $1,750 = $4,600. Routes with zero shipments contribute zero cost.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Transportation data</div>\n<table class=\"exhibit-table\">\n<thead>\n<tr><th>Origin</th><th>Capacity</th><th>Warehouse 1<br><small>Demand 300</small></th><th>Warehouse 2<br><small>Demand 350</small></th><th>Warehouse 3<br><small>Demand 250</small></th></tr>\n</thead>\n<tbody>\n<tr><th>Plant A</th><td>500</td><td>$4/unit</td><td>$6/unit</td><td>$8/unit</td></tr>\n<tr><th>Plant B</th><td>400</td><td>$5/unit</td><td>$3/unit</td><td>$7/unit</td></tr>\n</tbody>\n</table>\n\n<div class=\"exhibit-title\">Proposed shipment plan</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Origin</th><th>Warehouse 1</th><th>Warehouse 2</th><th>Warehouse 3</th><th>Total shipped</th></tr></thead>\n<tbody>\n<tr><th>Plant A</th><td>300</td><td>200</td><td>0</td><td>500</td></tr>\n<tr><th>Plant B</th><td>0</td><td>150</td><td>250</td><td>400</td></tr>\n<tr><th>Total received</th><td>300</td><td>350</td><td>250</td><td>900</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-09",
+    "source": "Exam Feedback",
+    "sourceRef": "Q9",
+    "question": "Is the proposed shipment plan feasible?",
+    "answer": "Yes; both plant capacities and all three warehouse demands are satisfied",
+    "distractors": [
+      "No; Plant A exceeds its capacity by 200 units",
+      "No; Warehouse 2 receives only 200 units",
+      "No; a feasible plan must use every possible route"
+    ],
+    "explanation": "Plant A ships 500 units and Plant B ships 400, exactly matching their capacities. Warehouse receipts are 300, 350, and 250, exactly matching the three demands. A route is allowed to carry zero units, so unused routes do not make the plan infeasible.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Proposed shipment plan</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Origin</th><th>Warehouse 1</th><th>Warehouse 2</th><th>Warehouse 3</th><th>Total shipped</th></tr></thead>\n<tbody>\n<tr><th>Plant A</th><td>300</td><td>200</td><td>0</td><td>500</td></tr>\n<tr><th>Plant B</th><td>0</td><td>150</td><td>250</td><td>400</td></tr>\n<tr><th>Total received</th><td>300</td><td>350</td><td>250</td><td>900</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-10",
+    "source": "Exam Feedback",
+    "sourceRef": "Q10",
+    "question": "What is the total cost of the alternative shipment plan, and how does it compare with the proposed plan?",
+    "answer": "$4,300, which is $300 less than the proposed plan",
+    "distractors": [
+      "$4,900, which is $300 more than the proposed plan",
+      "$4,600, so the plans have equal cost",
+      "$3,300, which is $1,300 less than the proposed plan"
+    ],
+    "explanation": "Alternative-plan cost = 250($4) + 250($8) + 50($5) + 350($3) = $1,000 + $2,000 + $250 + $1,050 = $4,300. The proposed plan costs $4,600, so the alternative is cheaper by $300.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Transportation data</div>\n<table class=\"exhibit-table\">\n<thead>\n<tr><th>Origin</th><th>Capacity</th><th>Warehouse 1<br><small>Demand 300</small></th><th>Warehouse 2<br><small>Demand 350</small></th><th>Warehouse 3<br><small>Demand 250</small></th></tr>\n</thead>\n<tbody>\n<tr><th>Plant A</th><td>500</td><td>$4/unit</td><td>$6/unit</td><td>$8/unit</td></tr>\n<tr><th>Plant B</th><td>400</td><td>$5/unit</td><td>$3/unit</td><td>$7/unit</td></tr>\n</tbody>\n</table>\n\n<div class=\"exhibit-title\">Alternative shipment plan</div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Origin</th><th>Warehouse 1</th><th>Warehouse 2</th><th>Warehouse 3</th><th>Total shipped</th></tr></thead>\n<tbody>\n<tr><th>Plant A</th><td>250</td><td>0</td><td>250</td><td>500</td></tr>\n<tr><th>Plant B</th><td>50</td><td>350</td><td>0</td><td>400</td></tr>\n<tr><th>Total received</th><td>300</td><td>350</td><td>250</td><td>900</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-11",
+    "source": "Exam Feedback",
+    "sourceRef": "Q11",
+    "question": "An unused route has a reduced cost of $2 in a cost-minimization transportation model. What does this mean?",
+    "answer": "Its unit shipping cost must improve by about $2—normally decrease by $2—before the route can become competitive",
+    "distractors": [
+      "Using the route immediately reduces total cost by $2 per unit",
+      "The route must ship exactly two units",
+      "The route's capacity must increase by two units"
+    ],
+    "explanation": "For a zero-valued route in a minimization model, reduced cost measures how much its objective coefficient must improve before it can enter an optimal solution. A $2 reduced cost means the route's unit cost generally must fall by $2; at the exact threshold, an alternate optimum may appear.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 12, §12-4a and Ch. 13, §13-4.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-12",
+    "source": "Exam Feedback",
+    "sourceRef": "Q12",
+    "question": "A plant-capacity constraint has a shadow price of -$1.50 in a minimum-cost transportation model. Within its allowable range, what is the effect of one additional unit of capacity?",
+    "answer": "Minimum total cost decreases by $1.50",
+    "distractors": [
+      "Minimum total cost increases by $1.50",
+      "The plant must ship 1.5 additional units",
+      "Every route cost decreases by $1.50"
+    ],
+    "explanation": "A shadow price is the change in the optimal objective value from a one-unit increase in a constraint's right-hand side. Because the objective is cost and the shadow price is -$1.50, one extra unit of capacity lowers the minimum cost by $1.50, provided the change stays inside the allowable range.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 12, §12-4a.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-13",
+    "source": "Exam Feedback",
+    "sourceRef": "Q13",
+    "question": "For a pure transshipment node with no supply or demand of its own, what balance equation is required?",
+    "answer": "Total flow into the node = Total flow out of the node",
+    "distractors": [
+      "Total flow into the node must be greater than total flow out",
+      "Total flow out of the node must equal zero",
+      "Total flow into the node equals demand plus capacity"
+    ],
+    "explanation": "A pure transshipment node only passes material through the network. If there is no creation, consumption, loss, or accumulation at that node, every unit entering must leave.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4b.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-14",
+    "source": "Exam Feedback",
+    "sourceRef": "Q14",
+    "question": "How can a prohibited shipping route be represented in a transportation model?",
+    "answer": "Omit its decision variable or constrain that route's shipment quantity to zero",
+    "distractors": [
+      "Give the route a negative shipping cost",
+      "Force the route to carry at least one unit",
+      "Increase the destination demand"
+    ],
+    "explanation": "A prohibited route should be made unavailable to the optimizer. The cleanest approaches are to exclude the route from the changing cells or add a constraint such as xᵢⱼ = 0. A very large penalty cost is sometimes used, but explicit exclusion is clearer.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 13, §13-4.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-15",
+    "source": "Exam Feedback",
+    "sourceRef": "Q15",
+    "question": "Which symbols are used for the basic nodes in a decision tree?",
+    "answer": "A square for a decision node, a circle for a probability node, and a triangle for an end node",
+    "distractors": [
+      "A circle for a decision node, a square for a probability node, and a star for an end node",
+      "A triangle for every type of node",
+      "A rectangle for uncertainty and a circle for every decision"
+    ],
+    "explanation": "A square marks a point where the decision maker chooses a branch. A circle marks resolution of an uncertain event. A triangle marks the end of a path after decisions, uncertainties, payoffs, and costs have been resolved.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §7-3.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-16",
+    "source": "Exam Feedback",
+    "sourceRef": "Q16",
+    "question": "What is the folding-back procedure in a decision tree?",
+    "answer": "Work from right to left, calculate probability-weighted values at chance nodes, and keep the best branch at decision nodes",
+    "distractors": [
+      "Work from left to right and add every terminal payoff",
+      "Choose the most likely branch at every chance node",
+      "Average all branches equally at both node types"
+    ],
+    "explanation": "At a probability node, calculate an expected value using the branch probabilities. At a decision node, compare the values of the available branches and retain the best one. Repeating this process from the far right back to the initial decision identifies the optimal strategy.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §7-3.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-17",
+    "source": "Exam Feedback",
+    "sourceRef": "Q17",
+    "question": "What is the EMV of the Large launch?",
+    "answer": "$36,000",
+    "distractors": [
+      "$72,000",
+      "$48,000",
+      "$60,000"
+    ],
+    "explanation": "EMV(Large) = $180,000(0.40) + (-$60,000)(0.60) = $72,000 - $36,000 = $36,000. The negative payoff must retain its negative sign in the weighted average.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §§7-2–7-3.",
+    "exhibit": "\n<div class=\"exhibit-title\">Product-launch decision <span>(payoffs)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Strong market<br><small>p = 0.40</small></th><th>Weak market<br><small>p = 0.60</small></th></tr></thead>\n<tbody>\n<tr><th>Large launch</th><td>$180,000</td><td>-$60,000</td></tr>\n<tr><th>Small launch</th><td>$100,000</td><td>$20,000</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-18",
+    "source": "Exam Feedback",
+    "sourceRef": "Q18",
+    "question": "What is the EMV of the Small launch?",
+    "answer": "$52,000",
+    "distractors": [
+      "$40,000",
+      "$60,000",
+      "$48,000"
+    ],
+    "explanation": "EMV(Small) = $100,000(0.40) + $20,000(0.60) = $40,000 + $12,000 = $52,000.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §§7-2–7-3.",
+    "exhibit": "\n<div class=\"exhibit-title\">Product-launch decision <span>(payoffs)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Strong market<br><small>p = 0.40</small></th><th>Weak market<br><small>p = 0.60</small></th></tr></thead>\n<tbody>\n<tr><th>Large launch</th><td>$180,000</td><td>-$60,000</td></tr>\n<tr><th>Small launch</th><td>$100,000</td><td>$20,000</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-19",
+    "source": "Exam Feedback",
+    "sourceRef": "Q19",
+    "question": "Which launch decision is selected by the EMV criterion?",
+    "answer": "Small launch, because its EMV of $52,000 exceeds the Large launch's $36,000",
+    "distractors": [
+      "Large launch, because its best payoff is $180,000",
+      "Large launch, because the strong market has a 0.40 probability",
+      "The two launches are tied"
+    ],
+    "explanation": "EMV compares the probability-weighted averages, not only the best possible outcomes. The Small launch has the larger EMV: $52,000 versus $36,000.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §§7-2–7-3.",
+    "exhibit": "\n<div class=\"exhibit-title\">Product-launch decision <span>(payoffs)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Strong market<br><small>p = 0.40</small></th><th>Weak market<br><small>p = 0.60</small></th></tr></thead>\n<tbody>\n<tr><th>Large launch</th><td>$180,000</td><td>-$60,000</td></tr>\n<tr><th>Small launch</th><td>$100,000</td><td>$20,000</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-20",
+    "source": "Exam Feedback",
+    "sourceRef": "Q20",
+    "question": "What is the expected value with perfect information (EVwPI) for the launch problem?",
+    "answer": "$84,000",
+    "distractors": [
+      "$52,000",
+      "$36,000",
+      "$32,000"
+    ],
+    "explanation": "With perfect information, choose Large if the market will be strong and Small if it will be weak. EVwPI = $180,000(0.40) + $20,000(0.60) = $72,000 + $12,000 = $84,000.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §7-6b.",
+    "exhibit": "\n<div class=\"exhibit-title\">Product-launch decision <span>(payoffs)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Strong market<br><small>p = 0.40</small></th><th>Weak market<br><small>p = 0.60</small></th></tr></thead>\n<tbody>\n<tr><th>Large launch</th><td>$180,000</td><td>-$60,000</td></tr>\n<tr><th>Small launch</th><td>$100,000</td><td>$20,000</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-21",
+    "source": "Exam Feedback",
+    "sourceRef": "Q21",
+    "question": "What is the expected value of perfect information (EVPI)?",
+    "answer": "$32,000",
+    "distractors": [
+      "$84,000",
+      "$52,000",
+      "$48,000"
+    ],
+    "explanation": "EVPI = EVwPI - best EMV without information = $84,000 - $52,000 = $32,000. It measures the maximum expected improvement available from information that predicts the market perfectly.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §7-6b.",
+    "exhibit": "\n<div class=\"exhibit-title\">Product-launch decision <span>(payoffs)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Strong market<br><small>p = 0.40</small></th><th>Weak market<br><small>p = 0.60</small></th></tr></thead>\n<tbody>\n<tr><th>Large launch</th><td>$180,000</td><td>-$60,000</td></tr>\n<tr><th>Small launch</th><td>$100,000</td><td>$20,000</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-22",
+    "source": "Exam Feedback",
+    "sourceRef": "Q22",
+    "question": "What is the maximum amount the company should pay for perfect market information?",
+    "answer": "$32,000",
+    "distractors": [
+      "$84,000",
+      "$52,000",
+      "$36,000"
+    ],
+    "explanation": "The company should not pay more than the incremental expected value created by the information. Because EVPI is $32,000, any price above $32,000 would make the company worse off on an expected-value basis.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §7-6b.",
+    "exhibit": "",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-23",
+    "source": "Exam Feedback",
+    "sourceRef": "Q23",
+    "question": "What is the unconditional probability of receiving a Positive market-research report?",
+    "answer": "0.42",
+    "distractors": [
+      "0.75",
+      "0.38",
+      "0.50"
+    ],
+    "explanation": "Use the law of total probability: P(Positive) = P(Positive|Strong)P(Strong) + P(Positive|Weak)P(Weak) = 0.75(0.40) + 0.20(0.60) = 0.30 + 0.12 = 0.42.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §7-6a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Market-research report accuracy</div>\n<table class=\"exhibit-table compact\">\n<thead><tr><th>Conditional probability</th><th>Value</th></tr></thead>\n<tbody>\n<tr><th>P(Positive report | Strong market)</th><td>0.75</td></tr>\n<tr><th>P(Positive report | Weak market)</th><td>0.20</td></tr>\n<tr><th>Prior P(Strong market)</th><td>0.40</td></tr>\n<tr><th>Prior P(Weak market)</th><td>0.60</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-24",
+    "source": "Exam Feedback",
+    "sourceRef": "Q24",
+    "question": "Given a Positive report, what is the posterior probability of a Strong market?",
+    "answer": "Approximately 0.7143",
+    "distractors": [
+      "0.4200",
+      "0.7500",
+      "0.2857"
+    ],
+    "explanation": "Bayes' rule gives P(Strong|Positive) = P(Positive|Strong)P(Strong) / P(Positive) = 0.75(0.40) / 0.42 = 0.30 / 0.42 ≈ 0.7143.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §7-6a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Market-research report accuracy</div>\n<table class=\"exhibit-table compact\">\n<thead><tr><th>Conditional probability</th><th>Value</th></tr></thead>\n<tbody>\n<tr><th>P(Positive report | Strong market)</th><td>0.75</td></tr>\n<tr><th>P(Positive report | Weak market)</th><td>0.20</td></tr>\n<tr><th>Prior P(Strong market)</th><td>0.40</td></tr>\n<tr><th>Prior P(Weak market)</th><td>0.60</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-25",
+    "source": "Exam Feedback",
+    "sourceRef": "Q25",
+    "question": "After a Positive report, which launch should be selected?",
+    "answer": "Large launch",
+    "distractors": [
+      "Small launch",
+      "Do not launch",
+      "The two launches are tied"
+    ],
+    "explanation": "With P(Strong|Positive) ≈ 0.7143, EMV(Large|Positive) = $180,000(0.7143) - $60,000(0.2857) ≈ $111,429. EMV(Small|Positive) = $100,000(0.7143) + $20,000(0.2857) ≈ $77,143. Large is preferred.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §§7-3 and 7-6a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Product-launch decision <span>(payoffs)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Strong market<br><small>p = 0.40</small></th><th>Weak market<br><small>p = 0.60</small></th></tr></thead>\n<tbody>\n<tr><th>Large launch</th><td>$180,000</td><td>-$60,000</td></tr>\n<tr><th>Small launch</th><td>$100,000</td><td>$20,000</td></tr>\n</tbody>\n</table>\n\n<div class=\"exhibit-title\">Market-research report accuracy</div>\n<table class=\"exhibit-table compact\">\n<thead><tr><th>Conditional probability</th><th>Value</th></tr></thead>\n<tbody>\n<tr><th>P(Positive report | Strong market)</th><td>0.75</td></tr>\n<tr><th>P(Positive report | Weak market)</th><td>0.20</td></tr>\n<tr><th>Prior P(Strong market)</th><td>0.40</td></tr>\n<tr><th>Prior P(Weak market)</th><td>0.60</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-26",
+    "source": "Exam Feedback",
+    "sourceRef": "Q26",
+    "question": "Given a Negative report, what is the posterior probability of a Strong market?",
+    "answer": "Approximately 0.1724",
+    "distractors": [
+      "0.5800",
+      "0.2500",
+      "0.8276"
+    ],
+    "explanation": "P(Negative) = 1 - 0.42 = 0.58. Also, P(Negative|Strong) = 1 - 0.75 = 0.25. Therefore, P(Strong|Negative) = 0.25(0.40) / 0.58 = 0.10 / 0.58 ≈ 0.1724.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §7-6a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Market-research report accuracy</div>\n<table class=\"exhibit-table compact\">\n<thead><tr><th>Conditional probability</th><th>Value</th></tr></thead>\n<tbody>\n<tr><th>P(Positive report | Strong market)</th><td>0.75</td></tr>\n<tr><th>P(Positive report | Weak market)</th><td>0.20</td></tr>\n<tr><th>Prior P(Strong market)</th><td>0.40</td></tr>\n<tr><th>Prior P(Weak market)</th><td>0.60</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-27",
+    "source": "Exam Feedback",
+    "sourceRef": "Q27",
+    "question": "After a Negative report, which launch should be selected?",
+    "answer": "Small launch",
+    "distractors": [
+      "Large launch",
+      "The two launches are tied",
+      "Large launch only if the report cost is zero"
+    ],
+    "explanation": "With P(Strong|Negative) ≈ 0.1724, EMV(Large|Negative) ≈ $180,000(0.1724) - $60,000(0.8276) = -$18,621. EMV(Small|Negative) ≈ $100,000(0.1724) + $20,000(0.8276) = $33,793. Small is preferred.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §§7-3 and 7-6a.",
+    "exhibit": "\n<div class=\"exhibit-title\">Product-launch decision <span>(payoffs)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Strong market<br><small>p = 0.40</small></th><th>Weak market<br><small>p = 0.60</small></th></tr></thead>\n<tbody>\n<tr><th>Large launch</th><td>$180,000</td><td>-$60,000</td></tr>\n<tr><th>Small launch</th><td>$100,000</td><td>$20,000</td></tr>\n</tbody>\n</table>\n\n<div class=\"exhibit-title\">Market-research report accuracy</div>\n<table class=\"exhibit-table compact\">\n<thead><tr><th>Conditional probability</th><th>Value</th></tr></thead>\n<tbody>\n<tr><th>P(Positive report | Strong market)</th><td>0.75</td></tr>\n<tr><th>P(Positive report | Weak market)</th><td>0.20</td></tr>\n<tr><th>Prior P(Strong market)</th><td>0.40</td></tr>\n<tr><th>Prior P(Weak market)</th><td>0.60</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
+  },
+  {
+    "id": "feedback-28",
+    "source": "Exam Feedback",
+    "sourceRef": "Q28",
+    "question": "What is the expected value of the market-research information (EVSI) before paying for the report?",
+    "answer": "$14,400",
+    "distractors": [
+      "$66,400",
+      "$32,000",
+      "$52,000"
+    ],
+    "explanation": "First fold back the report strategy. A Positive report occurs with probability 0.42 and leads to the Large launch with conditional EMV about $111,429. A Negative report occurs with probability 0.58 and leads to the Small launch with conditional EMV about $33,793. Expected value with the report = 0.42($111,429) + 0.58($33,793) = $46,800 + $19,600 = $66,400. EVSI = $66,400 - $52,000 = $14,400.",
+    "citation": "Exam Feedback practice; Albright & Winston, 8e, Ch. 7, §§7-6a–7-6b.",
+    "exhibit": "\n<div class=\"exhibit-title\">Product-launch decision <span>(payoffs)</span></div>\n<table class=\"exhibit-table\">\n<thead><tr><th>Decision</th><th>Strong market<br><small>p = 0.40</small></th><th>Weak market<br><small>p = 0.60</small></th></tr></thead>\n<tbody>\n<tr><th>Large launch</th><td>$180,000</td><td>-$60,000</td></tr>\n<tr><th>Small launch</th><td>$100,000</td><td>$20,000</td></tr>\n</tbody>\n</table>\n\n<div class=\"exhibit-title\">Market-research report accuracy</div>\n<table class=\"exhibit-table compact\">\n<thead><tr><th>Conditional probability</th><th>Value</th></tr></thead>\n<tbody>\n<tr><th>P(Positive report | Strong market)</th><td>0.75</td></tr>\n<tr><th>P(Positive report | Weak market)</th><td>0.20</td></tr>\n<tr><th>Prior P(Strong market)</th><td>0.40</td></tr>\n<tr><th>Prior P(Weak market)</th><td>0.60</td></tr>\n</tbody>\n</table>\n",
+    "caveat": ""
   }
 ];
 const DIFFICULTY_ORDER = ['Easy', 'Standard', 'Hard'];
@@ -3512,6 +3967,7 @@ let selectedDifficulties = new Set(DIFFICULTY_ORDER);
 let studyGuideEnabled = true;
 let quizletEnabled = true;
 let a7Enabled = true;
+let examFeedbackEnabled = true;
 
 try {
   const saved = JSON.parse(localStorage.getItem('bual5380FinalFavorites') || '[]');
@@ -3537,6 +3993,11 @@ try {
 try {
   const savedA7State = localStorage.getItem('bual5380FinalA7Enabled');
   if (savedA7State === 'false') a7Enabled = false;
+} catch (e) {}
+
+try {
+  const savedExamFeedbackState = localStorage.getItem('bual5380FinalExamFeedbackEnabled');
+  if (savedExamFeedbackState === 'false') examFeedbackEnabled = false;
 } catch (e) {}
 
 const els = {
@@ -3573,7 +4034,8 @@ const els = {
   starredBtn: document.getElementById('starredBtn'),
   studyGuideToggleBtn: document.getElementById('studyGuideToggleBtn'),
   quizletToggleBtn: document.getElementById('quizletToggleBtn'),
-  a7ToggleBtn: document.getElementById('a7ToggleBtn')
+  a7ToggleBtn: document.getElementById('a7ToggleBtn'),
+  examFeedbackToggleBtn: document.getElementById('examFeedbackToggleBtn')
 };
 
 function shuffle(arr) {
@@ -3591,7 +4053,7 @@ function numericRef(item) {
 }
 
 function stableQuestionOrder(indices) {
-  const sourceRank = { 'Study Guide': 0, 'Quizlet': 1, 'A7 Notes': 2 };
+  const sourceRank = { 'Study Guide': 0, 'Quizlet': 1, 'A7 Notes': 2, 'Exam Feedback': 3 };
   return [...indices].sort((a, b) => {
     const qa = QUESTIONS[a];
     const qb = QUESTIONS[b];
@@ -3613,6 +4075,7 @@ function buildDefaultOrder() {
     if (q.source === 'Study Guide') return studyGuideEnabled && selectedDifficulties.has(q.difficulty);
     if (q.source === 'Quizlet') return quizletEnabled;
     if (q.source === 'A7 Notes') return a7Enabled;
+    if (q.source === 'Exam Feedback') return examFeedbackEnabled;
     return false;
   });
   return stableQuestionOrder(indices);
@@ -3698,6 +4161,26 @@ function toggleA7Section() {
   start(null, 'full', false);
 }
 
+function persistExamFeedbackToggle() {
+  try {
+    localStorage.setItem('bual5380FinalExamFeedbackEnabled', examFeedbackEnabled ? 'true' : 'false');
+  } catch (e) {}
+}
+
+function renderExamFeedbackToggle() {
+  els.examFeedbackToggleBtn.textContent = examFeedbackEnabled ? 'Exam Feedback: On' : 'Exam Feedback: Off';
+  els.examFeedbackToggleBtn.setAttribute('aria-pressed', examFeedbackEnabled ? 'true' : 'false');
+  els.examFeedbackToggleBtn.classList.toggle('btn-toggle-off', !examFeedbackEnabled);
+}
+
+function toggleExamFeedbackSection() {
+  examFeedbackEnabled = !examFeedbackEnabled;
+  persistExamFeedbackToggle();
+  renderExamFeedbackToggle();
+  lastMissed = [];
+  start(null, 'full', false);
+}
+
 function toggleDifficulty(level) {
   if (selectedDifficulties.has(level)) {
     if (selectedDifficulties.size === 1) return;
@@ -3718,6 +4201,7 @@ function favoriteIndices() {
       if (q.source === 'Study Guide' && !studyGuideEnabled) return -1;
       if (q.source === 'Quizlet' && !quizletEnabled) return -1;
       if (q.source === 'A7 Notes' && !a7Enabled) return -1;
+      if (q.source === 'Exam Feedback' && !examFeedbackEnabled) return -1;
       return i;
     })
     .filter(i => i >= 0);
@@ -3765,10 +4249,11 @@ function modeLabel() {
   const studyGuideState = studyGuideEnabled ? `Study Guide: ${mix}` : 'Study Guide off';
   const quizletState = quizletEnabled ? 'Quizlet on' : 'Quizlet off';
   const a7State = a7Enabled ? 'A7 on' : 'A7 off';
-  if (currentMode === 'shuffled') return `Shuffled · ${studyGuideState} · ${quizletState} · ${a7State}`;
-  if (currentMode === 'starred') return `Starred practice · ${studyGuideState} · ${quizletState} · ${a7State}`;
-  if (currentMode === 'missed') return `Missed practice · ${studyGuideState} · ${quizletState} · ${a7State}`;
-  return `Fixed order · ${studyGuideState} · ${quizletState} · ${a7State}`;
+  const examFeedbackState = examFeedbackEnabled ? 'Feedback on' : 'Feedback off';
+  if (currentMode === 'shuffled') return `Shuffled · ${studyGuideState} · ${quizletState} · ${a7State} · ${examFeedbackState}`;
+  if (currentMode === 'starred') return `Starred practice · ${studyGuideState} · ${quizletState} · ${a7State} · ${examFeedbackState}`;
+  if (currentMode === 'missed') return `Missed practice · ${studyGuideState} · ${quizletState} · ${a7State} · ${examFeedbackState}`;
+  return `Fixed order · ${studyGuideState} · ${quizletState} · ${a7State} · ${examFeedbackState}`;
 }
 
 function updateStats() {
@@ -3808,9 +4293,11 @@ function render() {
   const isStudyGuide = item.source === 'Study Guide';
   const isQuizlet = item.source === 'Quizlet';
   const isA7 = item.source === 'A7 Notes';
+  const isExamFeedback = item.source === 'Exam Feedback';
   els.quizCard.classList.toggle('source-quizlet', isQuizlet);
   els.quizCard.classList.toggle('source-a7', isA7);
-  const sourceClass = isQuizlet ? 'quizlet' : (isA7 ? 'a7' : 'guide');
+  els.quizCard.classList.toggle('source-exam-feedback', isExamFeedback);
+  const sourceClass = isQuizlet ? 'quizlet' : (isA7 ? 'a7' : (isExamFeedback ? 'exam-feedback' : 'guide'));
   els.sourceBadge.className = 'source-badge ' + sourceClass;
   els.sourceBadge.textContent = `${item.source} · ${item.sourceRef}`;
 
@@ -3940,6 +4427,7 @@ els.difficultyButtons.forEach(btn => btn.addEventListener('click', () => toggleD
 els.studyGuideToggleBtn.addEventListener('click', toggleStudyGuideSection);
 els.quizletToggleBtn.addEventListener('click', toggleQuizletSection);
 els.a7ToggleBtn.addEventListener('click', toggleA7Section);
+els.examFeedbackToggleBtn.addEventListener('click', toggleExamFeedbackSection);
 
 document.addEventListener('keydown', e => {
   if (els.quizCard.style.display === 'none') return;
@@ -3951,6 +4439,7 @@ renderDifficultyControls();
 renderStudyGuideToggle();
 renderQuizletToggle();
 renderA7Toggle();
+renderExamFeedbackToggle();
 start(null, 'full', false);
 </script>
 
